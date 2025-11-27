@@ -3,9 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PartexHub - Vollversion</title>
+<title>PartexHub Full</title>
 <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Montserrat&family=Lobster&family=Open+Sans&family=Pacifico&family=Fira+Code&family=Courier+Prime&display=swap" rel="stylesheet">
 <style>
+/* ------------------ Grundlayout ------------------ */
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:'Roboto',sans-serif;background:#f5f5f5;transition:0.3s;}
 body.dark{background:#121212;color:white;}
@@ -35,6 +36,10 @@ body.dark #editor{background:#1e1e1e;color:white;border:1px solid #444;}
 #settings-panel{display:none;position:fixed;top:60px;right:0;width:300px;background:white;border-left:1px solid #ccc;height:calc(100% - 60px);padding:20px;box-shadow:-4px 0 10px rgba(0,0,0,0.1);z-index:2000;}
 body.dark #settings-panel{background:#1e1e1e;color:white;border-left:1px solid #444;}
 .setting-item{margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;}
+#auth-panel{padding:40px;text-align:center;}
+#auth-panel input{padding:8px 12px;margin:5px;width:80%;border-radius:6px;border:1px solid #ccc;font-size:14px;}
+#auth-panel button{padding:8px 12px;margin:5px;width:50%;border-radius:6px;border:none;background:#1e90ff;color:white;font-size:14px;cursor:pointer;}
+#user-info{margin-bottom:15px;}
 </style>
 </head>
 <body>
@@ -47,7 +52,16 @@ body.dark #settings-panel{background:#1e1e1e;color:white;border-left:1px solid #
 </div>
 </header>
 
-<div class="dashboard" id="dashboard">
+<div id="auth-panel">
+<div id="user-info"></div>
+<input type="email" id="email" placeholder="Email"><br>
+<input type="password" id="password" placeholder="Passwort"><br>
+<button onclick="signup()">Registrieren</button>
+<button onclick="login()">Login</button><br>
+<button onclick="googleLogin()">Login mit Google</button>
+</div>
+
+<div class="dashboard" id="dashboard" style="display:none;">
 <div class="app-card" onclick="openWriter()">
 <img src="https://img.icons8.com/ios-filled/50/000000/edit--v1.png"/>
 <h2>PartexWriter</h2>
@@ -130,31 +144,91 @@ body.dark #settings-panel{background:#1e1e1e;color:white;border-left:1px solid #
 </div>
 </div>
 
-<script>
-// ---------- Dashboard ----------
-function goDashboard(){
-document.getElementById('dashboard').style.display='flex';
-document.getElementById('app-container').style.display='none';
-document.getElementById('writer-menu').style.display='none';
-document.getElementById('presenter-menu').style.display='none';
-document.getElementById('editor').style.display='none';
-document.getElementById('slides-container').style.display='none';
+<script type="module">
+// ---------------- Firebase Init ----------------
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBgNiehD0PECNhj3BcT8aRzgN6Q1PyAiWI",
+  authDomain: "partexcloud.firebaseapp.com",
+  projectId: "partexcloud",
+  messagingSenderId: "708155275046",
+  appId: "1:708155275046:web:fa7d7d82a06878a8cc33e7"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
+
+// ---------------- Auth Functions ----------------
+function updateUI(user){
+  const info = document.getElementById('user-info');
+  if(user){
+    info.innerHTML = `Eingeloggt als: ${user.email} <button onclick="logout()">Logout</button>`;
+    document.getElementById('auth-panel').style.display='none';
+    goDashboard();
+  } else {
+    info.innerHTML='';
+    document.getElementById('auth-panel').style.display='block';
+    document.getElementById('dashboard').style.display='none';
+    document.getElementById('app-container').style.display='none';
+  }
 }
 
-// ---------- Theme ----------
+window.signup = function(){
+  const email = document.getElementById('email').value;
+  const pass = document.getElementById('password').value;
+  createUserWithEmailAndPassword(auth,email,pass)
+    .then(userCredential=>{updateUI(userCredential.user);})
+    .catch(err=>alert(err.message));
+};
+
+window.login = function(){
+  const email = document.getElementById('email').value;
+  const pass = document.getElementById('password').value;
+  signInWithEmailAndPassword(auth,email,pass)
+    .then(userCredential=>{updateUI(userCredential.user);})
+    .catch(err=>alert(err.message));
+};
+
+window.googleLogin = function(){
+  signInWithPopup(auth, provider)
+    .then(result=>{updateUI(result.user);})
+    .catch(err=>alert(err.message));
+};
+
+window.logout = function(){
+  signOut(auth).then(()=>updateUI(null));
+};
+
+onAuthStateChanged(auth, user => updateUI(user));
+
+// ---------------- Dashboard & Theme ----------------
+function goDashboard(){
+  document.getElementById('dashboard').style.display='flex';
+  document.getElementById('app-container').style.display='block';
+  document.getElementById('writer-menu').style.display='none';
+  document.getElementById('presenter-menu').style.display='none';
+  document.getElementById('editor').style.display='none';
+  document.getElementById('slides-container').style.display='none';
+}
+
 function toggleTheme(){document.body.classList.toggle('dark');}
 function toggleSettings(){let panel=document.getElementById('settings-panel');panel.style.display=(panel.style.display==='block')?'none':'block';}
 
-// ---------- Writer ----------
+// ---------------- Writer ----------------
+let undoStack=[],redoStack=[];
 function openWriter(){
-document.getElementById('dashboard').style.display='none';
-document.getElementById('app-container').style.display='block';
-document.getElementById('writer-menu').style.display='flex';
-document.getElementById('presenter-menu').style.display='none';
-document.getElementById('editor').style.display='block';
-document.getElementById('slides-container').style.display='none';
-if(localStorage.getItem('partex-content')) document.getElementById('editor').innerHTML=localStorage.getItem('partex-content');
+  document.getElementById('dashboard').style.display='none';
+  document.getElementById('app-container').style.display='block';
+  document.getElementById('writer-menu').style.display='flex';
+  document.getElementById('presenter-menu').style.display='none';
+  document.getElementById('editor').style.display='block';
+  document.getElementById('slides-container').style.display='none';
+  if(localStorage.getItem('partex-content')) document.getElementById('editor').innerHTML=localStorage.getItem('partex-content');
 }
+
 function changeFont(){document.getElementById('editor').style.fontFamily=document.getElementById('font-select').value;}
 function changeFontSize(){document.getElementById('editor').style.fontSize=document.getElementById('font-size').value+'px';}
 function changeColor(){document.execCommand('foreColor', false, document.getElementById('text-color').value);}
@@ -173,35 +247,34 @@ function insertEmoji(){document.execCommand('insertText',false,'😊');}
 function undo(){document.execCommand('undo');}
 function redo(){document.execCommand('redo');}
 function saveAs(){
-let content=document.getElementById('editor').innerHTML;
-const blob=new Blob([content],{type:"text/html"});
-const a=document.createElement('a');
-a.href=URL.createObjectURL(blob);a.download='PartexDocument.html';
-a.click();
+  let content=document.getElementById('editor').innerHTML;
+  const blob=new Blob([content],{type:"text/html"});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);a.download='PartexDocument.html';a.click();
 }
 function newDocument(){document.getElementById('editor').innerHTML='';}
 function openDocument(){
-let input=document.createElement('input');input.type='file';input.accept='.html,.txt';
-input.onchange=e=>{
-let file=e.target.files[0];
-let reader=new FileReader();
-reader.onload=function(ev){document.getElementById('editor').innerHTML=ev.target.result;}
-reader.readAsText(file);
-};
-input.click();
+  let input=document.createElement('input');input.type='file';input.accept='.html,.txt';
+  input.onchange=e=>{
+    let file=e.target.files[0];
+    let reader=new FileReader();
+    reader.onload=function(ev){document.getElementById('editor').innerHTML=ev.target.result;}
+    reader.readAsText(file);
+  };
+  input.click();
 }
 
-// ---------- Presenter ----------
+// ---------------- Presenter ----------------
 let slides=[],currentSlide=0;
 function openPresenter(){
-document.getElementById('dashboard').style.display='none';
-document.getElementById('app-container').style.display='block';
-document.getElementById('writer-menu').style.display='none';
-document.getElementById('presenter-menu').style.display='flex';
-document.getElementById('editor').style.display='none';
-document.getElementById('slides-container').style.display='block';
-if(slides.length===0)addSlide();
-showSlide(currentSlide);
+  document.getElementById('dashboard').style.display='none';
+  document.getElementById('app-container').style.display='block';
+  document.getElementById('writer-menu').style.display='none';
+  document.getElementById('presenter-menu').style.display='flex';
+  document.getElementById('editor').style.display='none';
+  document.getElementById('slides-container').style.display='block';
+  if(slides.length===0)addSlide();
+  showSlide(currentSlide);
 }
 function addSlide(){const slide=document.createElement('div');slide.className='slide';slide.contentEditable=true;slide.innerText='Neue Folie';document.getElementById('slides-container').appendChild(slide);slides.push(slide);currentSlide=slides.length-1;showSlide(currentSlide);}
 function showSlide(index){slides.forEach((s,i)=>s.classList.remove('active'));if(slides[index])slides[index].classList.add('active');}
@@ -211,14 +284,14 @@ function addTextBox(){const tb=document.createElement('div');tb.contentEditable=
 function removeTextBox(){let tbs=document.querySelectorAll('.slide-textbox');if(tbs.length>0)tbs[tbs.length-1].remove();}
 function fullscreenSlide(){if(slides[currentSlide])slides[currentSlide].requestFullscreen();}
 function changeSlideBg(){if(slides[currentSlide])slides[currentSlide].style.background=document.getElementById('slide-bg').value;}
-function downloadSlides(){let content=slides.map(s=>s.innerText).join('\\n\\n');const blob=new Blob([content],{type:"text/plain"});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='PartexSlides.txt';a.click();}
+function downloadSlides(){let content=slides.map(s=>s.innerText).join('\n\n');const blob=new Blob([content],{type:"text/plain"});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='PartexSlides.txt';a.click();}
 
-// ---------- Autosave ----------
+// ---------------- Autosave ----------------
 setInterval(()=>{
-if(document.getElementById('autosave-writer')?.checked){localStorage.setItem('partex-content',document.getElementById('editor').innerHTML);}
-if(document.getElementById('autosave-presenter')?.checked && slides.length>0){slides.forEach((s,i)=>{localStorage.setItem('partex-slide-'+i,s.innerText);});}
+  if(document.getElementById('autosave-writer')?.checked){localStorage.setItem('partex-content',document.getElementById('editor').innerHTML);}
+  if(document.getElementById('autosave-presenter')?.checked && slides.length>0){slides.forEach((s,i)=>localStorage.setItem(`slide-${i}`,s.innerHTML));}
 },5000);
-window.onload=function(){let saved=0;while(localStorage.getItem('partex-slide-'+saved)){addSlide();slides[saved].innerText=localStorage.getItem('partex-slide-'+saved);saved++;}}
+
 </script>
 </body>
 </html>
