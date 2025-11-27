@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PartexHub Full 500+</title>
+<title>PartexHub Full Pro</title>
 <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Montserrat&family=Lobster&family=Open+Sans&family=Pacifico&family=Fira+Code&family=Courier+Prime&display=swap" rel="stylesheet">
 <style>
-/* Grundlayout */
+/* ---------------- Grundlayout ---------------- */
 *{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Roboto',sans-serif;background:#f5f5f5;color:#222;transition:0.3s;}
+body{font-family:'Roboto',sans-serif;background:#f5f5f5;transition:0.3s;overflow-x:hidden;}
 body.dark{background:#121212;color:white;}
 header{background:#1e1e1e;color:white;padding:15px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:1000;box-shadow:0 4px 12px rgba(0,0,0,0.2);}
 header h1{font-family:'Montserrat',sans-serif;font-size:28px;letter-spacing:1px;}
@@ -53,6 +53,7 @@ body.dark #settings-panel{background:#1e1e1e;color:white;border-left:1px solid #
 <button onclick="toggleSettings()">Einstellungen</button>
 </div>
 </header>
+
 <div id="auth-panel">
 <div id="user-info"></div>
 <input type="email" id="email" placeholder="Email"><br>
@@ -60,6 +61,7 @@ body.dark #settings-panel{background:#1e1e1e;color:white;border-left:1px solid #
 <button onclick="signup()">Registrieren</button>
 <button onclick="login()">Login</button>
 </div>
+
 <div class="dashboard" id="dashboard" style="display:none;">
 <div class="app-card" onclick="openWriter()">
 <img src="https://img.icons8.com/ios-filled/50/000000/edit--v1.png"/>
@@ -72,8 +74,9 @@ body.dark #settings-panel{background:#1e1e1e;color:white;border-left:1px solid #
 <div class="tooltip">Erstelle Präsentationen!</div>
 </div>
 </div>
+
 <div id="app-container">
-<!-- Writer Menü -->
+<!-- Writer Menu -->
 <div class="menu-bar" id="writer-menu" style="display:none;">
 <select id="font-select" onchange="changeFont()">
 <option>Roboto</option><option>Montserrat</option><option>Lobster</option><option>Open Sans</option><option>Pacifico</option><option>Fira Code</option><option>Courier Prime</option>
@@ -101,8 +104,11 @@ body.dark #settings-panel{background:#1e1e1e;color:white;border-left:1px solid #
 <button onclick="openDocument()">Öffnen</button>
 <button onclick="insertTable()">Tabelle</button>
 </div>
+
+<!-- Writer Editor -->
 <div id="editor" contenteditable="true" style="display:none;"></div>
-<!-- Presenter Menü -->
+
+<!-- Presenter -->
 <div class="menu-bar" id="presenter-menu" style="display:none;">
 <button onclick="prevSlide()">←</button>
 <button onclick="nextSlide()">→</button>
@@ -114,6 +120,8 @@ body.dark #settings-panel{background:#1e1e1e;color:white;border-left:1px solid #
 <button onclick="removeTextBox()">Textbox entfernen</button>
 </div>
 <div id="slides-container"></div>
+
+<!-- Settings -->
 <div id="settings-panel">
 <h3>Einstellungen</h3>
 <div class="setting-item">
@@ -137,25 +145,81 @@ body.dark #settings-panel{background:#1e1e1e;color:white;border-left:1px solid #
 </select>
 </div>
 </div>
+
 <script type="module">
-// Firebase & Auth (Email/Passwort)
+// ---------------- Firebase Init ----------------
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
-const firebaseConfig={apiKey:"AIzaSyBgNiehD0PECNhj3BcT8aRzgN6Q1PyAiWI",authDomain:"partexcloud.firebaseapp.com",projectId:"partexcloud",messagingSenderId:"708155275046",appId:"1:708155275046:web:fa7d7d82a06878a8cc33e7"};
-const app=initializeApp(firebaseConfig);
-const auth=getAuth(app);
-function updateUI(user){const info=document.getElementById('user-info');if(user){info.innerHTML=`Eingeloggt als: ${user.email} <button onclick=\"logout()\">Logout</button>`;document.getElementById('auth-panel').style.display='none';goDashboard();}else{info.innerHTML='';document.getElementById('auth-panel').style.display='block';document.getElementById('dashboard').style.display='none';document.getElementById('app-container').style.display='none';}}
-window.signup=function(){let email=document.getElementById('email').value,pass=document.getElementById('password').value;createUserWithEmailAndPassword(auth,email,pass).then(u=>updateUI(u.user)).catch(e=>alert(e.message));};
-window.login=function(){let email=document.getElementById('email').value,pass=document.getElementById('password').value;signInWithEmailAndPassword(auth,email,pass).then(u=>updateUI(u.user)).catch(e=>alert(e.message));};
-window.logout=function(){signOut(auth).then(()=>updateUI(null));};
-onAuthStateChanged(auth,user=>updateUI(user));
-// Writer Funktionen
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBgNiehD0PECNhj3BcT8aRzgN6Q1PyAiWI",
+  authDomain: "partexcloud.firebaseapp.com",
+  projectId: "partexcloud",
+  messagingSenderId: "708155275046",
+  appId: "1:708155275046:web:fa7d7d82a06878a8cc33e7"
+};
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+// ---------------- Auth ----------------
+function updateUI(user){
+  const info = document.getElementById('user-info');
+  if(user){
+    info.innerHTML = `Eingeloggt als: ${user.email} <button onclick="logout()">Logout</button>`;
+    document.getElementById('auth-panel').style.display='none';
+    goDashboard();
+  } else {
+    info.innerHTML='';
+    document.getElementById('auth-panel').style.display='block';
+    document.getElementById('dashboard').style.display='none';
+    document.getElementById('app-container').style.display='none';
+  }
+}
+window.signup = function(){
+  const email = document.getElementById('email').value;
+  const pass = document.getElementById('password').value;
+  createUserWithEmailAndPassword(auth,email,pass)
+    .then(userCredential=>updateUI(userCredential.user))
+    .catch(err=>alert(err.message));
+};
+window.login = function(){
+  const email = document.getElementById('email').value;
+  const pass = document.getElementById('password').value;
+  signInWithEmailAndPassword(auth,email,pass)
+    .then(userCredential=>updateUI(userCredential.user))
+    .catch(err=>alert(err.message));
+};
+window.logout = function(){signOut(auth).then(()=>updateUI(null));};
+onAuthStateChanged(auth, user => updateUI(user));
+
+// ---------------- Dashboard ----------------
+function goDashboard(){
+  document.getElementById('dashboard').style.display='flex';
+  document.getElementById('app-container').style.display='block';
+  document.getElementById('writer-menu').style.display='none';
+  document.getElementById('presenter-menu').style.display='none';
+  document.getElementById('editor').style.display='none';
+  document.getElementById('slides-container').style.display='none';
+}
+function toggleTheme(){document.body.classList.toggle('dark');}
+function toggleSettings(){let panel=document.getElementById('settings-panel');panel.style.display=(panel.style.display==='block')?'none':'block';}
+
+// ---------------- Writer ----------------
 let undoStack=[],redoStack=[];
-function openWriter(){document.getElementById('dashboard').style.display='none';document.getElementById('app-container').style.display='block';document.getElementById('writer-menu').style.display='flex';document.getElementById('presenter-menu').style.display='none';document.getElementById('editor').style.display='block';document.getElementById('slides-container').style.display='none';document.getElementById('editor').innerHTML=localStorage.getItem('partex-content')||'';}
+function openWriter(){
+  document.getElementById('dashboard').style.display='none';
+  document.getElementById('app-container').style.display='block';
+  document.getElementById('writer-menu').style.display='flex';
+  document.getElementById('presenter-menu').style.display='none';
+  document.getElementById('editor').style.display='block';
+  document.getElementById('slides-container').style.display='none';
+  let content = localStorage.getItem('partex-content');
+  document.getElementById('editor').innerHTML = content ? content : '';
+}
 function changeFont(){document.getElementById('editor').style.fontFamily=document.getElementById('font-select').value;}
 function changeFontSize(){document.getElementById('editor').style.fontSize=document.getElementById('font-size').value+'px';}
-function changeColor(){document.execCommand('foreColor',false,document.getElementById('text-color').value);}
-function changeBg(){document.execCommand('backColor',false,document.getElementById('bg-color').value);}
+function changeColor(){document.execCommand('foreColor', false, document.getElementById('text-color').value);}
+function changeBg(){document.execCommand('backColor', false, document.getElementById('bg-color').value);}
 function boldText(){document.execCommand('bold');}
 function italicText(){document.execCommand('italic');}
 function underlineText(){document.execCommand('underline');}
@@ -171,8 +235,36 @@ function undo(){document.execCommand('undo');}
 function redo(){document.execCommand('redo');}
 function saveAs(){let content=document.getElementById('editor').innerHTML;const blob=new Blob([content],{type:"text/html"});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='PartexDocument.html';a.click();}
 function newDocument(){document.getElementById('editor').innerHTML='';}
-function openDocument(){let input=document.createElement('input');input.type='file';input.accept='.html,.txt';input.onchange=e=>{let file=e.target.files[0];let reader=new FileReader();reader.onload=ev=>document.getElementById('editor').innerHTML=ev.target.result;reader.readAsText(file);};input.click();}
-function insertTable(){let r=prompt("Zeilen",2),c=prompt("Spalten",2);if(!r||!c)return;let table='<table border="1" style="border-collapse:collapse;">';for(let i=0;i<r;i++){table+='<tr>';for(let j=0;j<c;j++){table+='<td>&nbsp;</td>';}table+='</tr>';}table+='</table>';document.execCommand('insertHTML',false,table);}
+function openDocument(){let input=document.createElement('input');input.type='file';input.accept='.html,.txt';input.onchange=e=>{let file=e.target.files[0];let reader=new FileReader();reader.onload=function(ev){document.getElementById('editor').innerHTML=ev.target.result;};reader.readAsText(file);};input.click();}
+function insertTable(){let rows=prompt("Anzahl der Zeilen?",2);let cols=prompt("Anzahl der Spalten?",2);if(!rows||!cols)return;let table='<table border="1" style="border-collapse:collapse;">';for(let i=0;i<rows;i++){table+='<tr>';for(let j=0;j<cols;j++){table+='<td>&nbsp;</td>';}table+='</tr>';}table+='</table>';document.execCommand('insertHTML',false,table);}
+
+// ---------------- Presenter ----------------
+let slides=[],currentSlide=0;
+function openPresenter(){
+  document.getElementById('dashboard').style.display='none';
+  document.getElementById('app-container').style.display='block';
+  document.getElementById('writer-menu').style.display='none';
+  document.getElementById('presenter-menu').style.display='flex';
+  document.getElementById('editor').style.display='none';
+  document.getElementById('slides-container').style.display='block';
+  if(slides.length===0)addSlide();
+  showSlide(currentSlide);
+}
+function addSlide(){const slide=document.createElement('div');slide.className='slide';slide.contentEditable=true;slide.innerText='Neue Folie';document.getElementById('slides-container').appendChild(slide);slides.push(slide);currentSlide=slides.length-1;showSlide(currentSlide);}
+function showSlide(index){slides.forEach((s,i)=>s.classList.remove('active'));if(slides[index])slides[index].classList.add('active');}
+function nextSlide(){if(currentSlide<slides.length-1)currentSlide++;showSlide(currentSlide);}
+function prevSlide(){if(currentSlide>0)currentSlide--;showSlide(currentSlide);}
+function addTextBox(){const tb=document.createElement('div');tb.contentEditable=true;tb.innerText='Textbox';tb.style.position='absolute';tb.style.top='50px';tb.style.left='50px';tb.style.padding='10px';tb.style.background='rgba(255,255,255,0.8)';tb.style.border='1px solid #ccc';tb.className='slide-textbox';if(slides[currentSlide])slides[currentSlide].appendChild(tb);dragElement(tb);}
+function removeTextBox(){let tbs=document.querySelectorAll('.slide-textbox');if(tbs.length>0)tbs[tbs.length-1].remove();}
+function fullscreenSlide(){if(slides[currentSlide])slides[currentSlide].requestFullscreen();}
+function changeSlideBg(){if(slides[currentSlide])slides[currentSlide].style.background=document.getElementById('slide-bg').value;}
+function downloadSlides(){let content=slides.map(s=>s.innerText).join('\n\n');const blob=new Blob([content],{type:"text/plain"});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='PartexSlides.txt';a.click();}
+
+// ---------------- Drag & Drop ----------------
+function dragElement(elmnt){let pos1=0,pos2=0,pos3=0,pos4=0;elmnt.onmousedown=dragMouseDown;
+function dragMouseDown(e){e=e||window.event;e.preventDefault();pos3=e.clientX;pos4=e.clientY;document.onmouseup=closeDragElement;document.onmousemove=elementDrag;}
+function elementDrag(e){e=e||window.event;e.preventDefault();pos1=pos3-e.clientX;pos2=pos4-e.clientY;pos3=e.clientX;pos4=e.clientY;elmnt.style.top=(elmnt.offsetTop-pos2)+'px';elmnt.style.left=(elmnt.offsetLeft-pos1)+'px';}
+function closeDragElement(){document.onmouseup=null;document.onmousemove=null;}}
 </script>
 </body>
 </html>
