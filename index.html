@@ -127,6 +127,7 @@
         .app-card img {
             width: 60px;
             height: 60px;
+            filter: grayscale(0.3);
         }
         
         .app-card .tooltip {
@@ -152,7 +153,7 @@
             transition: 0.5s;
         }
         
-        /* Writer Styles - IMPROVED */
+        /* Writer Styles */
         .writer-container {
             background: white;
             border-radius: 12px;
@@ -206,11 +207,6 @@
             background: #4d4d4d;
         }
         
-        .menu-bar button.active {
-            background: #007bff;
-            color: white;
-        }
-        
         #editor {
             width: 100%;
             min-height: 600px;
@@ -229,7 +225,7 @@
             color: white;
         }
         
-        /* Presenter Styles - IMPROVED */
+        /* Presenter Styles */
         .presenter-container {
             background: white;
             border-radius: 12px;
@@ -422,7 +418,7 @@
             font-weight: bold;
         }
         
-        /* Mail App Styles - FIXED */
+        /* Mail App Styles */
         #mail-container {
             display: none;
             width: 100%;
@@ -963,67 +959,6 @@
             display: block;
         }
         
-        /* Ribbon Menu for Writer */
-        .ribbon {
-            display: flex;
-            background: #f8f9fa;
-            border-bottom: 1px solid #dee2e6;
-            padding: 8px;
-        }
-        
-        body.dark .ribbon {
-            background: #2d2d2d;
-            border-bottom: 1px solid #444;
-        }
-        
-        .ribbon-tab {
-            padding: 8px 16px;
-            cursor: pointer;
-            border-radius: 4px;
-            margin-right: 5px;
-            transition: 0.2s;
-        }
-        
-        .ribbon-tab.active {
-            background: #007bff;
-            color: white;
-        }
-        
-        .ribbon-content {
-            display: none;
-            padding: 15px;
-            background: white;
-            border-bottom: 1px solid #dee2e6;
-        }
-        
-        .ribbon-content.active {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        
-        body.dark .ribbon-content {
-            background: #2d2d2d;
-            border-bottom: 1px solid #444;
-        }
-        
-        .ribbon-group {
-            display: flex;
-            flex-direction: column;
-            margin-right: 20px;
-        }
-        
-        .ribbon-group-label {
-            font-size: 12px;
-            margin-bottom: 5px;
-            color: #6c757d;
-        }
-        
-        .ribbon-buttons {
-            display: flex;
-            gap: 5px;
-        }
-        
         /* Status Bar */
         .status-bar {
             display: flex;
@@ -1053,6 +988,7 @@
 
     <div id="auth-panel">
         <div id="user-info"></div>
+        <input type="text" id="username" placeholder="Benutzername"><br>
         <input type="email" id="email" placeholder="Email"><br>
         <input type="password" id="password" placeholder="Passwort"><br>
         <button onclick="signup()">Registrieren</button>
@@ -1092,89 +1028,35 @@
         <!-- Writer App -->
         <div id="writer-app" style="display:none;">
             <div class="writer-container">
-                <!-- Ribbon Menu -->
-                <div class="ribbon">
-                    <div class="ribbon-tab active" onclick="showRibbonTab('home')">Start</div>
-                    <div class="ribbon-tab" onclick="showRibbonTab('insert')">Einfügen</div>
-                    <div class="ribbon-tab" onclick="showRibbonTab('layout')">Layout</div>
-                    <div class="ribbon-tab" onclick="showRibbonTab('review')">Überprüfen</div>
-                </div>
-                
-                <!-- Home Ribbon -->
-                <div class="ribbon-content active" id="home-ribbon">
-                    <div class="ribbon-group">
-                        <div class="ribbon-group-label">Zwischenablage</div>
-                        <div class="ribbon-buttons">
-                            <button onclick="pasteText()"><i class="fas fa-paste"></i></button>
-                            <button onclick="cutText()"><i class="fas fa-cut"></i></button>
-                            <button onclick="copyText()"><i class="fas fa-copy"></i></button>
-                        </div>
-                    </div>
-                    <div class="ribbon-group">
-                        <div class="ribbon-group-label">Schriftart</div>
-                        <div class="ribbon-buttons">
-                            <select id="font-family" onchange="changeFontFamily()">
-                                <option value="Arial">Arial</option>
-                                <option value="Times New Roman">Times New Roman</option>
-                                <option value="Courier New">Courier New</option>
-                                <option value="Georgia">Georgia</option>
-                                <option value="Verdana">Verdana</option>
-                            </select>
-                            <select id="font-size-ribbon" onchange="changeFontSizeRibbon()">
-                                <option value="8">8</option>
-                                <option value="10">10</option>
-                                <option value="12">12</option>
-                                <option value="14" selected>14</option>
-                                <option value="16">16</option>
-                                <option value="18">18</option>
-                                <option value="20">20</option>
-                                <option value="24">24</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="ribbon-group">
-                        <div class="ribbon-group-label">Absatz</div>
-                        <div class="ribbon-buttons">
-                            <button onclick="increaseIndent()"><i class="fas fa-indent"></i></button>
-                            <button onclick="decreaseIndent()"><i class="fas fa-outdent"></i></button>
-                            <button onclick="justifyLeft()"><i class="fas fa-align-left"></i></button>
-                            <button onclick="justifyCenter()"><i class="fas fa-align-center"></i></button>
-                            <button onclick="justifyRight()"><i class="fas fa-align-right"></i></button>
-                            <button onclick="justifyFull()"><i class="fas fa-align-justify"></i></button>
-                        </div>
-                    </div>
-                    <div class="ribbon-group">
-                        <div class="ribbon-group-label">Formatierung</div>
-                        <div class="ribbon-buttons">
-                            <button onclick="boldText()"><i class="fas fa-bold"></i></button>
-                            <button onclick="italicText()"><i class="fas fa-italic"></i></button>
-                            <button onclick="underlineText()"><i class="fas fa-underline"></i></button>
-                            <button onclick="strikeText()"><i class="fas fa-strikethrough"></i></button>
-                            <button onclick="changeTextColor()"><i class="fas fa-palette"></i></button>
-                            <button onclick="changeHighlightColor()"><i class="fas fa-highlighter"></i></button>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Insert Ribbon -->
-                <div class="ribbon-content" id="insert-ribbon">
-                    <div class="ribbon-group">
-                        <div class="ribbon-group-label">Einfügen</div>
-                        <div class="ribbon-buttons">
-                            <button onclick="insertImage()"><i class="fas fa-image"></i> Bild</button>
-                            <button onclick="insertTable()"><i class="fas fa-table"></i> Tabelle</button>
-                            <button onclick="insertLink()"><i class="fas fa-link"></i> Link</button>
-                            <button onclick="insertEmoji()"><i class="fas fa-smile"></i> Emoji</button>
-                        </div>
-                    </div>
-                    <div class="ribbon-group">
-                        <div class="ribbon-group-label">Seiten</div>
-                        <div class="ribbon-buttons">
-                            <button onclick="insertPageBreak()"><i class="fas fa-file-alt"></i> Seitenumbruch</button>
-                            <button onclick="insertHeader()"><i class="fas fa-heading"></i> Kopfzeile</button>
-                            <button onclick="insertFooter()"><i class="fas fa-shoe-prints"></i> Fußzeile</button>
-                        </div>
-                    </div>
+                <div class="menu-bar">
+                    <select id="font-select" onchange="changeFont()">
+                        <option value="Arial">Arial</option>
+                        <option value="Georgia">Georgia</option>
+                        <option value="Times New Roman">Times New Roman</option>
+                        <option value="Courier New">Courier New</option>
+                    </select>
+                    <select id="font-size" onchange="changeFontSize()">
+                        <option value="12">12</option>
+                        <option value="14">14</option>
+                        <option value="16" selected>16</option>
+                        <option value="18">18</option>
+                        <option value="20">20</option>
+                        <option value="24">24</option>
+                    </select>
+                    <input type="color" id="text-color" onchange="changeColor()" title="Textfarbe">
+                    <input type="color" id="bg-color" onchange="changeBg()" title="Hintergrundfarbe">
+                    <button onclick="boldText()"><i class="fas fa-bold"></i></button>
+                    <button onclick="italicText()"><i class="fas fa-italic"></i></button>
+                    <button onclick="underlineText()"><i class="fas fa-underline"></i></button>
+                    <button onclick="alignLeft()"><i class="fas fa-align-left"></i></button>
+                    <button onclick="alignCenter()"><i class="fas fa-align-center"></i></button>
+                    <button onclick="alignRight()"><i class="fas fa-align-right"></i></button>
+                    <button onclick="insertBullet()"><i class="fas fa-list-ul"></i></button>
+                    <button onclick="insertNumber()"><i class="fas fa-list-ol"></i></button>
+                    <button onclick="insertImage()"><i class="fas fa-image"></i></button>
+                    <button onclick="insertTable()"><i class="fas fa-table"></i></button>
+                    <button onclick="saveAs()"><i class="fas fa-save"></i> Speichern</button>
+                    <button onclick="printDocument()"><i class="fas fa-print"></i> Drucken</button>
                 </div>
                 
                 <!-- Editor -->
@@ -1200,18 +1082,10 @@
             <div class="presenter-container">
                 <div class="menu-bar">
                     <button onclick="addSlide()"><i class="fas fa-plus"></i> Neue Folie</button>
-                    <button onclick="duplicateSlide()"><i class="fas fa-copy"></i> Folie duplizieren</button>
                     <button onclick="deleteSlide()"><i class="fas fa-trash"></i> Folie löschen</button>
-                    <select id="slide-layout" onchange="changeSlideLayout()">
-                        <option value="title">Titelfolie</option>
-                        <option value="content">Inhaltsfolie</option>
-                        <option value="two-column">Zwei Spalten</option>
-                        <option value="image">Bildfolie</option>
-                    </select>
                     <input type="color" id="slide-bg" onchange="changeSlideBg()" title="Hintergrundfarbe">
                     <button onclick="addTextBox()"><i class="fas fa-font"></i> Textbox</button>
                     <button onclick="addImageToSlide()"><i class="fas fa-image"></i> Bild</button>
-                    <button onclick="addShape()"><i class="fas fa-shapes"></i> Form</button>
                     <button onclick="prevSlide()"><i class="fas fa-chevron-left"></i></button>
                     <button onclick="nextSlide()"><i class="fas fa-chevron-right"></i></button>
                     <button onclick="startPresentation()"><i class="fas fa-play"></i> Präsentation starten</button>
@@ -1342,18 +1216,6 @@
                             </select>
                         </div>
                     </div>
-                    
-                    <div class="settings-category">
-                        <h3>Benachrichtigungen</h3>
-                        <div class="setting-item">
-                            <label for="email-notifications">E-Mail Benachrichtigungen</label>
-                            <input type="checkbox" id="email-notifications" checked>
-                        </div>
-                        <div class="setting-item">
-                            <label for="sound-notifications">Sound-Benachrichtigungen</label>
-                            <input type="checkbox" id="sound-notifications">
-                        </div>
-                    </div>
                 </div>
                 
                 <div class="tab-content" id="account-tab">
@@ -1361,25 +1223,15 @@
                         <h3>Kontoinformationen</h3>
                         <div class="setting-item">
                             <label>Benutzername</label>
-                            <span id="username-display">Max Mustermann</span>
+                            <span id="username-display">Nicht eingeloggt</span>
                         </div>
                         <div class="setting-item">
                             <label>E-Mail</label>
-                            <span id="email-display">max.mustermann@partex.com</span>
+                            <span id="email-display">Nicht eingeloggt</span>
                         </div>
                         <div class="setting-item">
                             <label>Mitglied seit</label>
-                            <span id="member-since">01. Oktober 2023</span>
-                        </div>
-                    </div>
-                    
-                    <div class="settings-category">
-                        <h3>Sicherheit</h3>
-                        <div class="setting-item">
-                            <button onclick="changePassword()" class="mail-btn">Passwort ändern</button>
-                        </div>
-                        <div class="setting-item">
-                            <button onclick="enable2FA()" class="mail-btn">Zwei-Faktor-Authentifizierung aktivieren</button>
+                            <span id="member-since">-</span>
                         </div>
                     </div>
                 </div>
@@ -1391,22 +1243,6 @@
                             <label for="data-collection">Daten für Verbesserungen sammeln</label>
                             <input type="checkbox" id="data-collection">
                         </div>
-                        <div class="setting-item">
-                            <label for="personalized-ads">Personalisierte Werbung</label>
-                            <input type="checkbox" id="personalized-ads">
-                        </div>
-                    </div>
-                    
-                    <div class="settings-category">
-                        <h3>Privatsphäre</h3>
-                        <div class="setting-item">
-                            <label for="profile-visibility">Profil sichtbar für</label>
-                            <select id="profile-visibility">
-                                <option value="public">Alle</option>
-                                <option value="contacts" selected>Kontakte</option>
-                                <option value="private">Nur ich</option>
-                            </select>
-                        </div>
                     </div>
                 </div>
                 
@@ -1414,17 +1250,7 @@
                     <div class="settings-category">
                         <h3>Über PartexHub</h3>
                         <p>PartexHub Version 2.0</p>
-                        <p>© 2023 Partex Corporation. Alle Rechte vorbehalten.</p>
-                    </div>
-                    
-                    <div class="settings-category">
-                        <h3>Hilfe & Support</h3>
-                        <div class="setting-item">
-                            <button onclick="openHelp()" class="mail-btn">Hilfe-Center öffnen</button>
-                        </div>
-                        <div class="setting-item">
-                            <button onclick="contactSupport()" class="mail-btn">Support kontaktieren</button>
-                        </div>
+                        <p id="copyright-info">© 2024 Partex Corporation. Alle Rechte vorbehalten.</p>
                     </div>
                 </div>
             </div>
@@ -1467,15 +1293,15 @@
             <p>Wählen Sie einen Benutzernamen für Ihre @partex.com E-Mail Adresse</p>
             <div>
                 <div class="email-option" onclick="selectEmailOption('vorname.nachname')">
-                    <h3>vorname.nachname@partex.com</h3>
+                    <h3 id="option1-text">vorname.nachname@partex.com</h3>
                     <p>Standard Format</p>
                 </div>
                 <div class="email-option" onclick="selectEmailOption('vornamenachname')">
-                    <h3>vornamenachname@partex.com</h3>
+                    <h3 id="option2-text">vornamenachname@partex.com</h3>
                     <p>Ohne Punkte</p>
                 </div>
                 <div class="email-option" onclick="selectEmailOption('nickname')">
-                    <h3>nickname@partex.com</h3>
+                    <h3 id="option3-text">nickname@partex.com</h3>
                     <p>Spitzname</p>
                 </div>
             </div>
@@ -1494,37 +1320,44 @@
     <div id="notification" class="notification"></div>
 
     <script>
-        // ---------------- Auth Simulation ----------------
+        // ---------------- Dynamische Daten ----------------
+        const currentYear = new Date().getFullYear();
+        document.getElementById('copyright-info').textContent = `© ${currentYear} Partex Corporation. Alle Rechte vorbehalten.`;
+
+        // ---------------- Auth System ----------------
         let currentUser = null;
         let userEmailAddress = null;
         let selectedEmailOption = null;
         
         // Sample user database for email suggestions
         const userDatabase = [
-            { name: "Max Mustermann", email: "max.mustermann@partex.com" },
-            { name: "Anna Schmidt", email: "anna.schmidt@partex.com" },
-            { name: "Thomas Weber", email: "thomas.weber@partex.com" },
-            { name: "Lisa Fischer", email: "lisa.fischer@partex.com" },
-            { name: "David Wagner", email: "david.wagner@partex.com" },
-            { name: "Sarah Meyer", email: "sarah.meyer@partex.com" },
-            { name: "Paul Becker", email: "paul.becker@partex.com" },
-            { name: "Julia Hoffmann", email: "julia.hoffmann@partex.com" },
-            { name: "Michael Schulz", email: "michael.schulz@partex.com" },
-            { name: "Maria Koch", email: "maria.koch@partex.com" }
+            { name: "Support Team", email: "support@partex.com" },
+            { name: "Admin Team", email: "admin@partex.com" },
+            { name: "Info Service", email: "info@partex.com" }
         ];
         
         function updateUI(user) {
             const info = document.getElementById('user-info');
             if (user) {
-                info.innerHTML = `Eingeloggt als: ${user.email} <button onclick="logout()">Logout</button>`;
+                info.innerHTML = `Eingeloggt als: ${user.username} (${user.email}) <button onclick="logout()">Logout</button>`;
                 document.getElementById('auth-panel').style.display = 'none';
                 document.getElementById('dashboard').style.display = 'flex';
                 currentUser = user;
                 
+                // Update settings display
+                document.getElementById('username-display').textContent = user.username;
+                document.getElementById('email-display').textContent = user.email;
+                document.getElementById('member-since').textContent = new Date().toLocaleDateString('de-DE');
+                
+                // Update email options with actual username
+                const username = user.username.toLowerCase();
+                document.getElementById('option1-text').textContent = `${username}@partex.com`;
+                document.getElementById('option2-text').textContent = `${username.replace('.', '')}@partex.com`;
+                document.getElementById('option3-text').textContent = `${username.split('.')[0]}@partex.com`;
+                
                 // Check if user has email address
                 userEmailAddress = localStorage.getItem(`partexmail-${user.email}`);
                 if (!userEmailAddress) {
-                    // Show email setup if no address exists
                     showEmailSetup();
                 }
             } else {
@@ -1539,33 +1372,48 @@
         }
         
         window.signup = function() {
+            const username = document.getElementById('username').value;
             const email = document.getElementById('email').value;
             const pass = document.getElementById('password').value;
             
-            if (!email || !pass) {
+            if (!username || !email || !pass) {
                 showNotification('Bitte füllen Sie alle Felder aus', 'error');
                 return;
             }
             
             // Simuliere Registrierung
-            const user = { email: email };
+            const user = { username, email };
+            localStorage.setItem('partex-user', JSON.stringify(user));
             updateUI(user);
             showNotification('Erfolgreich registriert!');
         };
         
         window.login = function() {
+            const username = document.getElementById('username').value;
             const email = document.getElementById('email').value;
             const pass = document.getElementById('password').value;
             
-            if (!email || !pass) {
+            if (!username || !email || !pass) {
                 showNotification('Bitte füllen Sie alle Felder aus', 'error');
                 return;
             }
             
-            // Simuliere Login
-            const user = { email: email };
+            // Check if user exists
+            const savedUser = localStorage.getItem('partex-user');
+            if (savedUser) {
+                const user = JSON.parse(savedUser);
+                if (user.email === email) {
+                    updateUI(user);
+                    showNotification('Erfolgreich eingeloggt!');
+                    return;
+                }
+            }
+            
+            // Create new user if not exists
+            const user = { username, email };
+            localStorage.setItem('partex-user', JSON.stringify(user));
             updateUI(user);
-            showNotification('Erfolgreich eingeloggt!');
+            showNotification('Neues Konto erstellt und eingeloggt!');
         };
         
         window.logout = function() {
@@ -1573,8 +1421,19 @@
             showNotification('Erfolgreich ausgeloggt!');
         };
         
-        // Initial UI aufrufen
-        updateUI(null);
+        // Check for existing login on load
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedUser = localStorage.getItem('partex-user');
+            if (savedUser) {
+                updateUI(JSON.parse(savedUser));
+            }
+            
+            const savedTheme = localStorage.getItem('partex-theme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark');
+                document.getElementById('theme-select').value = 'dark';
+            }
+        });
 
         // ---------------- Dashboard ----------------
         function goDashboard() {
@@ -1604,7 +1463,7 @@
                 document.getElementById('settings-panel').style.display === 'block' ? 'none' : 'block';
         }
 
-        // ---------------- Writer App - ENHANCED ----------------
+        // ---------------- Writer App ----------------
         function openWriter() {
             if (!currentUser) {
                 showNotification('Bitte loggen Sie sich zuerst ein', 'error');
@@ -1639,87 +1498,6 @@
             showNotification('PartexWriter geöffnet');
         }
         
-        // Ribbon functions
-        function showRibbonTab(tabName) {
-            // Hide all ribbon contents
-            document.querySelectorAll('.ribbon-content').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            
-            // Remove active class from all tabs
-            document.querySelectorAll('.ribbon-tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            
-            // Show selected tab and set active
-            document.getElementById(tabName + '-ribbon').classList.add('active');
-            event.target.classList.add('active');
-        }
-        
-        // Enhanced writer functions
-        function changeFontFamily() {
-            const font = document.getElementById('font-family').value;
-            document.execCommand('fontName', false, font);
-        }
-        
-        function changeFontSizeRibbon() {
-            const size = document.getElementById('font-size-ribbon').value;
-            document.execCommand('fontSize', false, size);
-        }
-        
-        function increaseIndent() {
-            document.execCommand('indent', false, null);
-        }
-        
-        function decreaseIndent() {
-            document.execCommand('outdent', false, null);
-        }
-        
-        function changeTextColor() {
-            const color = prompt('Textfarbe eingeben (hex oder name):', '#000000');
-            if (color) {
-                document.execCommand('foreColor', false, color);
-            }
-        }
-        
-        function changeHighlightColor() {
-            const color = prompt('Hervorhebungsfarbe eingeben (hex oder name):', '#ffff00');
-            if (color) {
-                document.execCommand('hiliteColor', false, color);
-            }
-        }
-        
-        function insertLink() {
-            const url = prompt('URL eingeben:', 'https://');
-            if (url) {
-                document.execCommand('createLink', false, url);
-            }
-        }
-        
-        function insertPageBreak() {
-            document.execCommand('insertHTML', false, '<div style="page-break-after: always;"></div>');
-        }
-        
-        function insertHeader() {
-            document.execCommand('insertHTML', false, '<div class="header" contenteditable="true">Kopfzeile</div>');
-        }
-        
-        function insertFooter() {
-            document.execCommand('insertHTML', false, '<div class="footer" contenteditable="true">Fußzeile</div>');
-        }
-        
-        function pasteText() {
-            document.execCommand('paste');
-        }
-        
-        function cutText() {
-            document.execCommand('cut');
-        }
-        
-        function copyText() {
-            document.execCommand('copy');
-        }
-        
         function updateWordCount() {
             const text = document.getElementById('editor').innerText || '';
             const words = text.trim() ? text.trim().split(/\s+/).length : 0;
@@ -1732,20 +1510,32 @@
             localStorage.setItem('partex-writer-content', content);
         }
         
-        // Keep existing writer functions
+        // Writer functions
+        function changeFont() {
+            document.getElementById('editor').style.fontFamily = document.getElementById('font-select').value;
+        }
+        
+        function changeFontSize() {
+            document.getElementById('editor').style.fontSize = document.getElementById('font-size').value + 'px';
+        }
+        
+        function changeColor() {
+            document.execCommand('foreColor', false, document.getElementById('text-color').value);
+        }
+        
+        function changeBg() {
+            document.execCommand('backColor', false, document.getElementById('bg-color').value);
+        }
+        
         function boldText() { document.execCommand('bold'); }
         function italicText() { document.execCommand('italic'); }
         function underlineText() { document.execCommand('underline'); }
-        function strikeText() { document.execCommand('strikeThrough'); }
-        function justifyLeft() { document.execCommand('justifyLeft'); }
-        function justifyCenter() { document.execCommand('justifyCenter'); }
-        function justifyRight() { document.execCommand('justifyRight'); }
-        function justifyFull() { document.execCommand('justifyFull'); }
+        function alignLeft() { document.execCommand('justifyLeft'); }
+        function alignCenter() { document.execCommand('justifyCenter'); }
+        function alignRight() { document.execCommand('justifyRight'); }
         function insertBullet() { document.execCommand('insertUnorderedList'); }
         function insertNumber() { document.execCommand('insertOrderedList'); }
-        function insertEmoji() { document.execCommand('insertText', false, '😊'); }
-        function undo() { document.execCommand('undo'); }
-        function redo() { document.execCommand('redo'); }
+        
         function saveAs() {
             let content = document.getElementById('editor').innerHTML;
             const blob = new Blob([content], {type: "text/html"});
@@ -1755,27 +1545,24 @@
             a.click();
             showNotification('Dokument gespeichert');
         }
-        function newDocument() {
-            document.getElementById('editor').innerHTML = '<h1>Neues Dokument</h1><p>Beginnen Sie mit der Eingabe...</p>';
-            localStorage.removeItem('partex-writer-content');
-            updateWordCount();
-            showNotification('Neues Dokument erstellt');
-        }
-        function openDocument() {
+        
+        function printDocument() { window.print(); }
+        
+        function insertImage() {
             let input = document.createElement('input');
             input.type = 'file';
-            input.accept = '.html,.txt,.docx';
+            input.accept = 'image/*';
             input.onchange = e => {
                 let file = e.target.files[0];
                 let reader = new FileReader();
                 reader.onload = function(ev) {
-                    document.getElementById('editor').innerHTML = ev.target.result;
-                    updateWordCount();
+                    document.execCommand('insertImage', false, ev.target.result);
                 };
-                reader.readAsText(file);
+                reader.readAsDataURL(file);
             };
             input.click();
         }
+        
         function insertTable() {
             let rows = prompt("Anzahl der Zeilen?", 3);
             let cols = prompt("Anzahl der Spalten?", 3);
@@ -1791,35 +1578,10 @@
             table += '</table>';
             document.execCommand('insertHTML', false, table);
         }
-        function insertImage() {
-            let input = document.createElement('input');
-            input.type = 'file';
-            input.accept = 'image/*';
-            input.onchange = e => {
-                let file = e.target.files[0];
-                let reader = new FileReader();
-                reader.onload = function(ev) {
-                    document.execCommand('insertImage', false, ev.target.result);
-                };
-                reader.readAsDataURL(file);
-            };
-            input.click();
-        }
-        function printDocument() { window.print(); }
-        function findText() {
-            let search = prompt("Text suchen:");
-            if (search) {
-                let content = document.getElementById('editor').innerHTML;
-                let regex = new RegExp(search, "gi");
-                let newContent = content.replace(regex, match => `<mark>${match}</mark>`);
-                document.getElementById('editor').innerHTML = newContent;
-            }
-        }
 
-        // ---------------- Presenter App - ENHANCED ----------------
+        // ---------------- Presenter App ----------------
         let slides = [];
         let currentSlide = 0;
-        let isPresenting = false;
         
         function openPresenter() {
             if (!currentUser) {
@@ -1864,19 +1626,6 @@
             updateSlideCounter();
         }
         
-        function duplicateSlide() {
-            if (slides.length === 0) return;
-            
-            const slide = document.createElement('div');
-            slide.className = 'slide';
-            slide.innerHTML = slides[currentSlide].innerHTML;
-            document.getElementById('slides-container').appendChild(slide);
-            slides.push(slide);
-            currentSlide = slides.length - 1;
-            showSlide(currentSlide);
-            updateSlideCounter();
-        }
-        
         function deleteSlide() {
             if (slides.length <= 1) {
                 showNotification('Mindestens eine Folie muss vorhanden sein', 'error');
@@ -1889,26 +1638,6 @@
             if (currentSlide >= slides.length) currentSlide = slides.length - 1;
             showSlide(currentSlide);
             updateSlideCounter();
-        }
-        
-        function changeSlideLayout() {
-            const layout = document.getElementById('slide-layout').value;
-            const slide = slides[currentSlide];
-            
-            switch(layout) {
-                case 'title':
-                    slide.innerHTML = '<div class="slide-title" contenteditable="true">Titel der Folie</div>';
-                    break;
-                case 'content':
-                    slide.innerHTML = '<div class="slide-title" contenteditable="true">Titel</div><div class="slide-content" contenteditable="true">Inhalt hier eingeben...</div>';
-                    break;
-                case 'two-column':
-                    slide.innerHTML = '<div class="slide-title" contenteditable="true">Titel</div><div style="display:flex; gap:20px;"><div style="flex:1;" contenteditable="true">Linke Spalte</div><div style="flex:1;" contenteditable="true">Rechte Spalte</div></div>';
-                    break;
-                case 'image':
-                    slide.innerHTML = '<div class="slide-title" contenteditable="true">Titel</div><div style="text-align:center;"><p contenteditable="true">Bild hier einfügen</p></div>';
-                    break;
-            }
         }
         
         function addTextBox() {
@@ -1947,36 +1676,7 @@
             input.click();
         }
         
-        function addShape() {
-            const shapes = ['rectangle', 'circle', 'triangle'];
-            const shape = shapes[Math.floor(Math.random() * shapes.length)];
-            const slide = slides[currentSlide];
-            const shapeElement = document.createElement('div');
-            
-            shapeElement.style.width = '100px';
-            shapeElement.style.height = '100px';
-            shapeElement.style.position = 'absolute';
-            shapeElement.style.top = '150px';
-            shapeElement.style.left = '150px';
-            shapeElement.style.backgroundColor = '#007bff';
-            
-            if (shape === 'circle') {
-                shapeElement.style.borderRadius = '50%';
-            } else if (shape === 'triangle') {
-                shapeElement.style.width = '0';
-                shapeElement.style.height = '0';
-                shapeElement.style.borderLeft = '50px solid transparent';
-                shapeElement.style.borderRight = '50px solid transparent';
-                shapeElement.style.borderBottom = '100px solid #007bff';
-                shapeElement.style.backgroundColor = 'transparent';
-            }
-            
-            slide.appendChild(shapeElement);
-            dragElement(shapeElement);
-        }
-        
         function startPresentation() {
-            isPresenting = true;
             document.getElementById('slides-container').requestFullscreen().catch(err => {
                 console.log('Fullscreen error:', err);
             });
@@ -2035,31 +1735,228 @@
         function updateSlideCounter() {
             document.getElementById('slide-counter').textContent = `Folie ${currentSlide + 1} von ${slides.length}`;
         }
-        
-        // Handle fullscreen exit
-        document.addEventListener('fullscreenchange', function() {
-            if (!document.fullscreenElement) {
-                isPresenting = false;
-            }
-        });
-        
-        // Handle keyboard navigation
-        document.addEventListener('keydown', function(e) {
-            if (isPresenting) {
-                if (e.key === 'ArrowRight' || e.key === ' ') {
-                    nextSlide();
-                } else if (e.key === 'ArrowLeft') {
-                    prevSlide();
-                } else if (e.key === 'Escape') {
-                    document.exitFullscreen();
-                    isPresenting = false;
-                }
-            }
-        });
 
-        // ---------------- Mail App - FIXED ----------------
-        // ... (Mail code from previous implementation remains the same)
-        // This would be too long to include completely, but the structure is there
+        // ---------------- Mail App ----------------
+        let currentFolder = 'inbox';
+        let currentEmailId = null;
+        let emails = {
+            inbox: [
+                { 
+                    id: 1, 
+                    from: 'support@partex.com', 
+                    to: userEmailAddress, 
+                    subject: 'Willkommen bei PartexMail!', 
+                    body: 'Herzlich willkommen bei Ihrem neuen PartexMail Account!\n\nWir freuen uns, Sie in unserer Community begrüßen zu dürfen.', 
+                    date: new Date().toISOString(), 
+                    read: false 
+                }
+            ],
+            sent: [],
+            drafts: [],
+            trash: []
+        };
+        
+        function openMail() {
+            if (!currentUser) {
+                showNotification('Bitte loggen Sie sich zuerst ein', 'error');
+                return;
+            }
+            
+            if (!userEmailAddress) {
+                showEmailSetup();
+                return;
+            }
+            
+            document.getElementById('dashboard').style.display = 'none';
+            document.getElementById('app-container').style.display = 'block';
+            document.getElementById('writer-app').style.display = 'none';
+            document.getElementById('presenter-app').style.display = 'none';
+            document.getElementById('mail-container').style.display = 'block';
+            document.getElementById('settings-app').style.display = 'none';
+            document.getElementById('writer-header').style.display = 'none';
+            document.getElementById('presenter-header').style.display = 'none';
+            document.getElementById('mail-header').style.display = 'flex';
+            document.getElementById('settings-panel').style.display = 'none';
+            document.getElementById('email-setup').style.display = 'none';
+            
+            loadEmails();
+            showNotification('PartexMail geöffnet');
+        }
+        
+        function showEmailSetup() {
+            document.getElementById('dashboard').style.display = 'none';
+            document.getElementById('app-container').style.display = 'block';
+            document.getElementById('email-setup').style.display = 'block';
+        }
+        
+        function selectEmailOption(option) {
+            selectedEmailOption = option;
+            document.querySelectorAll('.email-option').forEach(el => el.classList.remove('selected'));
+            event.target.closest('.email-option').classList.add('selected');
+        }
+        
+        function useCustomEmail() {
+            const customEmail = document.getElementById('custom-email').value;
+            if (customEmail) {
+                selectedEmailOption = customEmail;
+                document.querySelectorAll('.email-option').forEach(el => el.classList.remove('selected'));
+                showNotification('Benutzerdefinierte E-Mail ausgewählt');
+            }
+        }
+        
+        function confirmEmail() {
+            if (!selectedEmailOption) {
+                showNotification('Bitte wählen Sie eine E-Mail Option aus', 'error');
+                return;
+            }
+            
+            let emailAddress;
+            if (selectedEmailOption === 'vorname.nachname') {
+                emailAddress = document.getElementById('option1-text').textContent;
+            } else if (selectedEmailOption === 'vornamenachname') {
+                emailAddress = document.getElementById('option2-text').textContent;
+            } else if (selectedEmailOption === 'nickname') {
+                emailAddress = document.getElementById('option3-text').textContent;
+            } else {
+                emailAddress = selectedEmailOption + '@partex.com';
+            }
+            
+            userEmailAddress = emailAddress;
+            localStorage.setItem(`partexmail-${currentUser.email}`, userEmailAddress);
+            
+            // Update welcome email
+            emails.inbox[0].to = userEmailAddress;
+            
+            showNotification(`Ihre PartexMail Adresse ist: ${userEmailAddress}`);
+            openMail();
+        }
+        
+        function showFolder(folder) {
+            currentFolder = folder;
+            document.querySelectorAll('.mail-folders li').forEach(el => el.classList.remove('active'));
+            event.target.closest('li').classList.add('active');
+            loadEmails();
+        }
+        
+        function loadEmails() {
+            const emailList = document.getElementById('email-list');
+            emailList.innerHTML = '';
+            
+            if (emails[currentFolder].length === 0) {
+                emailList.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: #6c757d;">
+                        <i class="fas fa-inbox" style="font-size: 48px; margin-bottom: 15px;"></i>
+                        <p>Keine E-Mails in diesem Ordner</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            emails[currentFolder].forEach(email => {
+                const emailItem = document.createElement('div');
+                emailItem.className = `mail-item ${email.read ? '' : 'unread'}`;
+                emailItem.onclick = () => viewEmail(email.id);
+                
+                const emailDate = new Date(email.date);
+                const formattedDate = emailDate.toLocaleDateString('de-DE');
+                
+                emailItem.innerHTML = `
+                    <div style="flex: 1; min-width: 0;">
+                        <div class="mail-sender">${email.from}</div>
+                        <div class="mail-subject">${email.subject}</div>
+                        <div class="mail-preview">${email.body.substring(0, 80)}...</div>
+                    </div>
+                    <div class="mail-date">${formattedDate}</div>
+                `;
+                
+                emailList.appendChild(emailItem);
+            });
+            
+            document.getElementById('empty-view').style.display = 'flex';
+            document.getElementById('mail-view').style.display = 'none';
+            currentEmailId = null;
+        }
+        
+        function viewEmail(id) {
+            const email = emails[currentFolder].find(e => e.id === id);
+            if (email) {
+                email.read = true;
+                currentEmailId = id;
+                
+                const emailDate = new Date(email.date);
+                const formattedDate = emailDate.toLocaleDateString('de-DE', { 
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+                
+                document.getElementById('email-content').innerHTML = `
+                    <div class="mail-header">
+                        <h2>${email.subject}</h2>
+                        <p><strong>Von:</strong> ${email.from}</p>
+                        <p><strong>An:</strong> ${email.to}</p>
+                        <p><strong>Datum:</strong> ${formattedDate}</p>
+                    </div>
+                    <div class="mail-body" style="white-space: pre-line; line-height: 1.6;">
+                        ${email.body}
+                    </div>
+                `;
+                
+                document.getElementById('empty-view').style.display = 'none';
+                document.getElementById('mail-view').style.display = 'block';
+                
+                loadEmails();
+            }
+        }
+        
+        function backToInbox() {
+            document.getElementById('empty-view').style.display = 'flex';
+            document.getElementById('mail-view').style.display = 'none';
+            currentEmailId = null;
+        }
+        
+        function openComposeModal() {
+            document.getElementById('compose-modal').style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('compose-to').focus();
+        }
+        
+        function closeComposeModal() {
+            document.getElementById('compose-modal').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+        }
+        
+        function sendEmail() {
+            const to = document.getElementById('compose-to').value;
+            const subject = document.getElementById('compose-subject').value;
+            const body = document.getElementById('compose-body').value;
+            
+            if (!to || !subject || !body) {
+                showNotification('Bitte füllen Sie alle Felder aus', 'error');
+                return;
+            }
+            
+            const newEmail = {
+                id: Date.now(),
+                from: userEmailAddress,
+                to: to,
+                subject: subject,
+                body: body,
+                date: new Date().toISOString(),
+                read: true
+            };
+            
+            emails.sent.push(newEmail);
+            showNotification('E-Mail gesendet!');
+            closeComposeModal();
+            loadEmails();
+        }
+        
+        function refreshMail() {
+            loadEmails();
+            showNotification('E-Mails aktualisiert');
+        }
 
         // ---------------- Settings App ----------------
         function openSettingsApp() {
@@ -2079,17 +1976,14 @@
         }
         
         function showSettingsTab(tabName) {
-            // Hide all tab contents
             document.querySelectorAll('.tab-content').forEach(tab => {
                 tab.classList.remove('active');
             });
             
-            // Remove active class from all tabs
             document.querySelectorAll('.tab-button').forEach(tab => {
                 tab.classList.remove('active');
             });
             
-            // Show selected tab and set active
             document.getElementById(tabName + '-tab').classList.add('active');
             event.target.classList.add('active');
         }
@@ -2099,13 +1993,6 @@
                 document.body.classList.add('dark');
             } else if (theme === 'light') {
                 document.body.classList.remove('dark');
-            } else {
-                // Auto theme based on system preference
-                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                    document.body.classList.add('dark');
-                } else {
-                    document.body.classList.remove('dark');
-                }
             }
             localStorage.setItem('partex-theme', theme);
             showNotification('Theme geändert');
@@ -2114,25 +2001,6 @@
         function changeUIFontSize(size) {
             document.body.style.fontSize = size === 'small' ? '14px' : size === 'large' ? '18px' : '16px';
             showNotification('Schriftgröße geändert');
-        }
-        
-        function changePassword() {
-            const newPassword = prompt('Neues Passwort eingeben:');
-            if (newPassword) {
-                showNotification('Passwort wurde geändert');
-            }
-        }
-        
-        function enable2FA() {
-            showNotification('Zwei-Faktor-Authentifizierung wurde aktiviert');
-        }
-        
-        function openHelp() {
-            showNotification('Hilfe-Center wird geöffnet');
-        }
-        
-        function contactSupport() {
-            showNotification('Support-Kontaktformular wird geöffnet');
         }
 
         // ---------------- Hilfsfunktionen ----------------
@@ -2150,7 +2018,6 @@
             }, 3000);
         }
 
-        // Drag and Drop function
         function dragElement(elmnt) {
             let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
             elmnt.onmousedown = dragMouseDown;
@@ -2180,20 +2047,6 @@
                 document.onmousemove = null;
             }
         }
-
-        // Theme aus localStorage laden
-        document.addEventListener('DOMContentLoaded', function() {
-            const savedTheme = localStorage.getItem('partex-theme');
-            if (savedTheme === 'dark') {
-                document.body.classList.add('dark');
-                document.getElementById('theme-select').value = 'dark';
-            } else if (savedTheme === 'auto') {
-                document.getElementById('theme-select').value = 'auto';
-                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                    document.body.classList.add('dark');
-                }
-            }
-        });
     </script>
 </body>
 </html>
