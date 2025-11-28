@@ -331,40 +331,6 @@
             background: rgba(255,255,255,0.2);
         }
         
-        /* Settings Panel */
-        #settings-panel {
-            display: none;
-            position: fixed;
-            top: 60px;
-            right: 0;
-            width: 300px;
-            background: white;
-            border-left: 1px solid #ccc;
-            height: calc(100% - 60px);
-            padding: 20px;
-            box-shadow: -4px 0 15px rgba(0,0,0,0.1);
-            z-index: 2000;
-            transition: 0.4s;
-            overflow-y: auto;
-        }
-        
-        body.dark #settings-panel {
-            background: #1e1e1e;
-            color: white;
-            border-left: 1px solid #444;
-        }
-        
-        .setting-item {
-            margin-bottom: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .setting-item label {
-            flex: 1;
-        }
-        
         /* Auth Panel */
         #auth-panel {
             padding: 50px;
@@ -658,116 +624,6 @@
             background: #0056b3;
         }
         
-        /* Compose Modal */
-        .compose-modal {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 80%;
-            max-width: 700px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            z-index: 3000;
-            overflow: hidden;
-        }
-        
-        body.dark .compose-modal {
-            background: #2d2d2d;
-        }
-        
-        .compose-header {
-            background: #f8f9fa;
-            padding: 15px 20px;
-            border-bottom: 1px solid #dee2e6;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        body.dark .compose-header {
-            background: #3d3d3d;
-            border-bottom: 1px solid #444;
-        }
-        
-        .compose-body {
-            padding: 20px;
-        }
-        
-        .compose-field {
-            margin-bottom: 15px;
-        }
-        
-        .compose-field label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        
-        .compose-field input, .compose-field textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #dee2e6;
-            border-radius: 4px;
-            font-family: 'Roboto', sans-serif;
-        }
-        
-        body.dark .compose-field input, body.dark .compose-field textarea {
-            background: #1e1e1e;
-            border-color: #444;
-            color: white;
-        }
-        
-        .compose-field textarea {
-            min-height: 200px;
-            resize: vertical;
-        }
-        
-        .compose-actions {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
-        }
-        
-        /* Email Suggestions */
-        .email-suggestions {
-            position: absolute;
-            background: white;
-            border: 1px solid #dee2e6;
-            border-radius: 4px;
-            max-height: 200px;
-            overflow-y: auto;
-            z-index: 1000;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            width: 100%;
-            display: none;
-        }
-        
-        body.dark .email-suggestions {
-            background: #2d2d2d;
-            border-color: #444;
-        }
-        
-        .email-suggestion {
-            padding: 10px 15px;
-            cursor: pointer;
-            border-bottom: 1px solid #f0f0f0;
-        }
-        
-        .email-suggestion:hover {
-            background: #f8f9fa;
-        }
-        
-        body.dark .email-suggestion:hover {
-            background: #3d3d3d;
-        }
-        
-        .email-suggestion:last-child {
-            border-bottom: none;
-        }
-        
         /* Neue Stile für zusätzliche Funktionen */
         .notification {
             position: fixed;
@@ -846,13 +702,14 @@
             background: #5a6268;
         }
         
-        /* Email Setup Styles */
+        /* Email Setup Styles - FIXED */
         #email-setup {
             display: none;
             padding: 30px;
             background: white;
             border-radius: 12px;
-            margin: 20px;
+            margin: 20px auto;
+            max-width: 800px;
             text-align: center;
             box-shadow: 0 8px 24px rgba(0,0,0,0.1);
         }
@@ -982,7 +839,6 @@
         <div class="buttons">
             <button onclick="goDashboard()">Dashboard</button>
             <button class="theme-toggle" onclick="toggleTheme()">Theme</button>
-            <button onclick="openSettings()">Einstellungen</button>
         </div>
     </header>
 
@@ -1207,14 +1063,6 @@
                                 <option value="auto">Automatisch</option>
                             </select>
                         </div>
-                        <div class="setting-item">
-                            <label for="font-size-setting">Schriftgröße</label>
-                            <select id="font-size-setting" onchange="changeUIFontSize(this.value)">
-                                <option value="small">Klein</option>
-                                <option value="medium" selected>Mittel</option>
-                                <option value="large">Groß</option>
-                            </select>
-                        </div>
                     </div>
                 </div>
                 
@@ -1228,10 +1076,6 @@
                         <div class="setting-item">
                             <label>E-Mail</label>
                             <span id="email-display">Nicht eingeloggt</span>
-                        </div>
-                        <div class="setting-item">
-                            <label>Mitglied seit</label>
-                            <span id="member-since">-</span>
                         </div>
                     </div>
                 </div>
@@ -1255,66 +1099,7 @@
                 </div>
             </div>
         </div>
-
-        <!-- Compose Modal -->
-        <div class="compose-modal" id="compose-modal">
-            <div class="compose-header">
-                <h3>Neue Nachricht</h3>
-                <button onclick="closeComposeModal()" style="background: none; border: none; font-size: 18px; cursor: pointer;">×</button>
-            </div>
-            <div class="compose-body">
-                <div class="compose-field">
-                    <label for="compose-to">An</label>
-                    <input type="text" id="compose-to" placeholder="Empfänger eingeben">
-                    <div class="email-suggestions" id="to-suggestions"></div>
-                </div>
-                <div class="compose-field">
-                    <label for="compose-subject">Betreff</label>
-                    <input type="text" id="compose-subject" placeholder="Betreff eingeben">
-                </div>
-                <div class="compose-field">
-                    <label for="compose-body">Nachricht</label>
-                    <textarea id="compose-body" placeholder="Ihre Nachricht..."></textarea>
-                </div>
-                <div class="compose-actions">
-                    <button class="mail-btn" onclick="saveDraft()">
-                        <i class="fas fa-save"></i> Entwurf speichern
-                    </button>
-                    <button class="mail-btn primary" onclick="sendEmail()">
-                        <i class="fas fa-paper-plane"></i> Senden
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Email Setup -->
-        <div id="email-setup">
-            <h2>Wählen Sie Ihre PartexMail Adresse</h2>
-            <p>Wählen Sie einen Benutzernamen für Ihre @partex.com E-Mail Adresse</p>
-            <div>
-                <div class="email-option" onclick="selectEmailOption('vorname.nachname')">
-                    <h3 id="option1-text">vorname.nachname@partex.com</h3>
-                    <p>Standard Format</p>
-                </div>
-                <div class="email-option" onclick="selectEmailOption('vornamenachname')">
-                    <h3 id="option2-text">vornamenachname@partex.com</h3>
-                    <p>Ohne Punkte</p>
-                </div>
-                <div class="email-option" onclick="selectEmailOption('nickname')">
-                    <h3 id="option3-text">nickname@partex.com</h3>
-                    <p>Spitzname</p>
-                </div>
-            </div>
-            <div style="margin-top:20px;">
-                <input type="text" id="custom-email" placeholder="Benutzerdefinierte Adresse" style="padding:10px;width:300px;border:1px solid #ccc;border-radius:4px;">
-                <button onclick="useCustomEmail()" style="padding:10px 20px;background:#007bff;color:white;border:none;border-radius:4px;cursor:pointer;margin-left:10px;">Verwenden</button>
-            </div>
-            <button onclick="confirmEmail()" style="padding:10px 30px;background:#28a745;color:white;border:none;border-radius:6px;cursor:pointer;margin-top:20px;font-size:16px;">E-Mail Adresse bestätigen</button>
-        </div>
     </div>
-
-    <!-- Overlay for modals -->
-    <div class="overlay" id="overlay" onclick="closeComposeModal()"></div>
 
     <!-- Notification Element -->
     <div id="notification" class="notification"></div>
@@ -1327,19 +1112,11 @@
         // ---------------- Auth System ----------------
         let currentUser = null;
         let userEmailAddress = null;
-        let selectedEmailOption = null;
-        
-        // Sample user database for email suggestions
-        const userDatabase = [
-            { name: "Support Team", email: "support@partex.com" },
-            { name: "Admin Team", email: "admin@partex.com" },
-            { name: "Info Service", email: "info@partex.com" }
-        ];
         
         function updateUI(user) {
             const info = document.getElementById('user-info');
             if (user) {
-                info.innerHTML = `Eingeloggt als: ${user.username} (${user.email}) <button onclick="logout()">Logout</button>`;
+                info.innerHTML = `Eingeloggt als: ${user.username} <button onclick="logout()">Logout</button>`;
                 document.getElementById('auth-panel').style.display = 'none';
                 document.getElementById('dashboard').style.display = 'flex';
                 currentUser = user;
@@ -1347,25 +1124,20 @@
                 // Update settings display
                 document.getElementById('username-display').textContent = user.username;
                 document.getElementById('email-display').textContent = user.email;
-                document.getElementById('member-since').textContent = new Date().toLocaleDateString('de-DE');
-                
-                // Update email options with actual username
-                const username = user.username.toLowerCase();
-                document.getElementById('option1-text').textContent = `${username}@partex.com`;
-                document.getElementById('option2-text').textContent = `${username.replace('.', '')}@partex.com`;
-                document.getElementById('option3-text').textContent = `${username.split('.')[0]}@partex.com`;
                 
                 // Check if user has email address
                 userEmailAddress = localStorage.getItem(`partexmail-${user.email}`);
-                if (!userEmailAddress) {
-                    showEmailSetup();
+                if (!userEmailAddress && user.email) {
+                    // Auto-create email address
+                    const username = user.username.toLowerCase().replace(/\s+/g, '.');
+                    userEmailAddress = `${username}@partex.com`;
+                    localStorage.setItem(`partexmail-${user.email}`, userEmailAddress);
                 }
             } else {
                 info.innerHTML = '';
                 document.getElementById('auth-panel').style.display = 'block';
                 document.getElementById('dashboard').style.display = 'none';
                 document.getElementById('app-container').style.display = 'none';
-                document.getElementById('email-setup').style.display = 'none';
                 currentUser = null;
                 userEmailAddress = null;
             }
@@ -1431,7 +1203,6 @@
             const savedTheme = localStorage.getItem('partex-theme');
             if (savedTheme === 'dark') {
                 document.body.classList.add('dark');
-                document.getElementById('theme-select').value = 'dark';
             }
         });
 
@@ -1446,21 +1217,12 @@
             document.getElementById('writer-header').style.display = 'none';
             document.getElementById('presenter-header').style.display = 'none';
             document.getElementById('mail-header').style.display = 'none';
-            document.getElementById('settings-panel').style.display = 'none';
-            document.getElementById('email-setup').style.display = 'none';
-            document.getElementById('compose-modal').style.display = 'none';
-            document.getElementById('overlay').style.display = 'none';
         }
         
         function toggleTheme() {
             document.body.classList.toggle('dark');
             localStorage.setItem('partex-theme', document.body.classList.contains('dark') ? 'dark' : 'light');
             showNotification('Theme geändert');
-        }
-        
-        function openSettings() {
-            document.getElementById('settings-panel').style.display = 
-                document.getElementById('settings-panel').style.display === 'block' ? 'none' : 'block';
         }
 
         // ---------------- Writer App ----------------
@@ -1479,8 +1241,6 @@
             document.getElementById('writer-header').style.display = 'flex';
             document.getElementById('presenter-header').style.display = 'none';
             document.getElementById('mail-header').style.display = 'none';
-            document.getElementById('settings-panel').style.display = 'none';
-            document.getElementById('email-setup').style.display = 'none';
             
             // Load saved content
             let content = localStorage.getItem('partex-writer-content');
@@ -1598,8 +1358,6 @@
             document.getElementById('writer-header').style.display = 'none';
             document.getElementById('presenter-header').style.display = 'flex';
             document.getElementById('mail-header').style.display = 'none';
-            document.getElementById('settings-panel').style.display = 'none';
-            document.getElementById('email-setup').style.display = 'none';
             
             // Initialize slides if empty
             if (slides.length === 0) {
@@ -1762,11 +1520,6 @@
                 return;
             }
             
-            if (!userEmailAddress) {
-                showEmailSetup();
-                return;
-            }
-            
             document.getElementById('dashboard').style.display = 'none';
             document.getElementById('app-container').style.display = 'block';
             document.getElementById('writer-app').style.display = 'none';
@@ -1776,59 +1529,14 @@
             document.getElementById('writer-header').style.display = 'none';
             document.getElementById('presenter-header').style.display = 'none';
             document.getElementById('mail-header').style.display = 'flex';
-            document.getElementById('settings-panel').style.display = 'none';
-            document.getElementById('email-setup').style.display = 'none';
+            
+            // Update emails with current user's email
+            if (userEmailAddress) {
+                emails.inbox[0].to = userEmailAddress;
+            }
             
             loadEmails();
             showNotification('PartexMail geöffnet');
-        }
-        
-        function showEmailSetup() {
-            document.getElementById('dashboard').style.display = 'none';
-            document.getElementById('app-container').style.display = 'block';
-            document.getElementById('email-setup').style.display = 'block';
-        }
-        
-        function selectEmailOption(option) {
-            selectedEmailOption = option;
-            document.querySelectorAll('.email-option').forEach(el => el.classList.remove('selected'));
-            event.target.closest('.email-option').classList.add('selected');
-        }
-        
-        function useCustomEmail() {
-            const customEmail = document.getElementById('custom-email').value;
-            if (customEmail) {
-                selectedEmailOption = customEmail;
-                document.querySelectorAll('.email-option').forEach(el => el.classList.remove('selected'));
-                showNotification('Benutzerdefinierte E-Mail ausgewählt');
-            }
-        }
-        
-        function confirmEmail() {
-            if (!selectedEmailOption) {
-                showNotification('Bitte wählen Sie eine E-Mail Option aus', 'error');
-                return;
-            }
-            
-            let emailAddress;
-            if (selectedEmailOption === 'vorname.nachname') {
-                emailAddress = document.getElementById('option1-text').textContent;
-            } else if (selectedEmailOption === 'vornamenachname') {
-                emailAddress = document.getElementById('option2-text').textContent;
-            } else if (selectedEmailOption === 'nickname') {
-                emailAddress = document.getElementById('option3-text').textContent;
-            } else {
-                emailAddress = selectedEmailOption + '@partex.com';
-            }
-            
-            userEmailAddress = emailAddress;
-            localStorage.setItem(`partexmail-${currentUser.email}`, userEmailAddress);
-            
-            // Update welcome email
-            emails.inbox[0].to = userEmailAddress;
-            
-            showNotification(`Ihre PartexMail Adresse ist: ${userEmailAddress}`);
-            openMail();
         }
         
         function showFolder(folder) {
@@ -1916,43 +1624,6 @@
             currentEmailId = null;
         }
         
-        function openComposeModal() {
-            document.getElementById('compose-modal').style.display = 'block';
-            document.getElementById('overlay').style.display = 'block';
-            document.getElementById('compose-to').focus();
-        }
-        
-        function closeComposeModal() {
-            document.getElementById('compose-modal').style.display = 'none';
-            document.getElementById('overlay').style.display = 'none';
-        }
-        
-        function sendEmail() {
-            const to = document.getElementById('compose-to').value;
-            const subject = document.getElementById('compose-subject').value;
-            const body = document.getElementById('compose-body').value;
-            
-            if (!to || !subject || !body) {
-                showNotification('Bitte füllen Sie alle Felder aus', 'error');
-                return;
-            }
-            
-            const newEmail = {
-                id: Date.now(),
-                from: userEmailAddress,
-                to: to,
-                subject: subject,
-                body: body,
-                date: new Date().toISOString(),
-                read: true
-            };
-            
-            emails.sent.push(newEmail);
-            showNotification('E-Mail gesendet!');
-            closeComposeModal();
-            loadEmails();
-        }
-        
         function refreshMail() {
             loadEmails();
             showNotification('E-Mails aktualisiert');
@@ -1969,8 +1640,6 @@
             document.getElementById('writer-header').style.display = 'none';
             document.getElementById('presenter-header').style.display = 'none';
             document.getElementById('mail-header').style.display = 'none';
-            document.getElementById('settings-panel').style.display = 'none';
-            document.getElementById('email-setup').style.display = 'none';
             
             showNotification('Einstellungen geöffnet');
         }
@@ -1996,11 +1665,6 @@
             }
             localStorage.setItem('partex-theme', theme);
             showNotification('Theme geändert');
-        }
-        
-        function changeUIFontSize(size) {
-            document.body.style.fontSize = size === 'small' ? '14px' : size === 'large' ? '18px' : '16px';
-            showNotification('Schriftgröße geändert');
         }
 
         // ---------------- Hilfsfunktionen ----------------
