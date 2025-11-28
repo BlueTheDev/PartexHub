@@ -288,6 +288,147 @@
             font-weight: bold;
         }
         
+        /* Mail App Styles */
+        #mail-container {
+            display: none;
+            width: 100%;
+            height: 80vh;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #ccc;
+            overflow: hidden;
+        }
+        
+        body.dark #mail-container {
+            background: #1e1e1e;
+            border: 1px solid #444;
+        }
+        
+        .mail-sidebar {
+            width: 250px;
+            background: #f8f9fa;
+            height: 100%;
+            border-right: 1px solid #dee2e6;
+            padding: 20px;
+            float: left;
+        }
+        
+        body.dark .mail-sidebar {
+            background: #2d2d2d;
+            border-right: 1px solid #444;
+        }
+        
+        .mail-content {
+            margin-left: 250px;
+            height: 100%;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .mail-folders {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+        
+        .mail-folders li {
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 6px;
+            margin-bottom: 5px;
+            transition: 0.2s;
+        }
+        
+        .mail-folders li:hover, .mail-folders li.active {
+            background: #e9ecef;
+        }
+        
+        body.dark .mail-folders li:hover, body.dark .mail-folders li.active {
+            background: #3d3d3d;
+        }
+        
+        .mail-list {
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        body.dark .mail-list {
+            border: 1px solid #444;
+        }
+        
+        .mail-item {
+            padding: 15px;
+            border-bottom: 1px solid #dee2e6;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        
+        .mail-item:hover {
+            background: #f8f9fa;
+        }
+        
+        body.dark .mail-item:hover {
+            background: #2d2d2d;
+        }
+        
+        .mail-item.unread {
+            font-weight: bold;
+            background: #e7f3ff;
+        }
+        
+        body.dark .mail-item.unread {
+            background: #1a3a5f;
+        }
+        
+        .mail-item:last-child {
+            border-bottom: none;
+        }
+        
+        .mail-sender {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .mail-subject {
+            margin-bottom: 5px;
+        }
+        
+        .mail-preview {
+            color: #6c757d;
+            font-size: 14px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .mail-view {
+            padding: 20px;
+        }
+        
+        .mail-header {
+            border-bottom: 1px solid #dee2e6;
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .mail-actions {
+            margin-bottom: 20px;
+        }
+        
+        .compose-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        
+        .compose-btn:hover {
+            background: #0056b3;
+        }
+        
         /* Neue Stile für zusätzliche Funktionen */
         .notification {
             position: fixed;
@@ -357,6 +498,45 @@
         .back-button:hover {
             background: #5a6268;
         }
+        
+        /* Email Setup Styles */
+        #email-setup {
+            display: none;
+            padding: 30px;
+            background: white;
+            border-radius: 12px;
+            margin: 20px;
+            text-align: center;
+        }
+        
+        body.dark #email-setup {
+            background: #1e1e1e;
+        }
+        
+        .email-option {
+            display: inline-block;
+            width: 200px;
+            padding: 20px;
+            margin: 10px;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        
+        .email-option:hover {
+            border-color: #007bff;
+            transform: translateY(-5px);
+        }
+        
+        .email-option.selected {
+            border-color: #007bff;
+            background: #e7f3ff;
+        }
+        
+        body.dark .email-option.selected {
+            background: #1a3a5f;
+        }
     </style>
 </head>
 <body>
@@ -387,6 +567,11 @@
             <img src="https://img.icons8.com/ios-filled/50/000000/presentation.png"/>
             <h2>PartexPresenter</h2>
             <div class="tooltip">Erstelle Präsentationen!</div>
+        </div>
+        <div class="app-card" onclick="openMail()">
+            <img src="https://img.icons8.com/ios-filled/50/000000/email.png"/>
+            <h2>PartexMail</h2>
+            <div class="tooltip">E-Mail Client mit @partex.com Adressen!</div>
         </div>
     </div>
 
@@ -455,6 +640,78 @@
         <div id="slides-container"></div>
         <div id="slide-counter"></div>
 
+        <!-- Mail Header -->
+        <div class="app-header" id="mail-header" style="display:none;">
+            <div class="app-title">PartexMail</div>
+            <button class="back-button" onclick="goDashboard()">Zurück zum Dashboard</button>
+        </div>
+        
+        <!-- Mail App -->
+        <div id="mail-container" style="display:none;">
+            <div class="mail-sidebar">
+                <button class="compose-btn" onclick="composeEmail()">Neue E-Mail</button>
+                <ul class="mail-folders">
+                    <li class="active" onclick="showFolder('inbox')">Posteingang</li>
+                    <li onclick="showFolder('sent')">Gesendet</li>
+                    <li onclick="showFolder('drafts')">Entwürfe</li>
+                    <li onclick="showFolder('trash')">Papierkorb</li>
+                </ul>
+            </div>
+            <div class="mail-content">
+                <div id="mail-list-view">
+                    <div class="mail-list" id="email-list">
+                        <!-- Emails werden hier dynamisch geladen -->
+                    </div>
+                </div>
+                <div id="mail-view" style="display:none;">
+                    <div class="mail-actions">
+                        <button onclick="backToInbox()">← Zurück</button>
+                        <button onclick="replyEmail()">Antworten</button>
+                        <button onclick="deleteEmail()">Löschen</button>
+                    </div>
+                    <div class="mail-view" id="email-content">
+                        <!-- Email-Inhalt wird hier angezeigt -->
+                    </div>
+                </div>
+                <div id="compose-view" style="display:none;">
+                    <div class="mail-actions">
+                        <button onclick="backToInbox()">Abbrechen</button>
+                        <button onclick="sendEmail()">Senden</button>
+                    </div>
+                    <div class="compose-form">
+                        <input type="text" id="compose-to" placeholder="An" style="width:100%;padding:10px;margin-bottom:10px;border:1px solid #ccc;border-radius:4px;">
+                        <input type="text" id="compose-subject" placeholder="Betreff" style="width:100%;padding:10px;margin-bottom:10px;border:1px solid #ccc;border-radius:4px;">
+                        <textarea id="compose-body" placeholder="Nachricht" style="width:100%;height:300px;padding:10px;border:1px solid #ccc;border-radius:4px;"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Email Setup -->
+        <div id="email-setup">
+            <h2>Wählen Sie Ihre PartexMail Adresse</h2>
+            <p>Wählen Sie einen Benutzernamen für Ihre @partex.com E-Mail Adresse</p>
+            <div>
+                <div class="email-option" onclick="selectEmailOption('vorname.nachname')">
+                    <h3>vorname.nachname@partex.com</h3>
+                    <p>Standard Format</p>
+                </div>
+                <div class="email-option" onclick="selectEmailOption('vornamenachname')">
+                    <h3>vornamenachname@partex.com</h3>
+                    <p>Ohne Punkte</p>
+                </div>
+                <div class="email-option" onclick="selectEmailOption('nickname')">
+                    <h3>nickname@partex.com</h3>
+                    <p>Spitzname</p>
+                </div>
+            </div>
+            <div style="margin-top:20px;">
+                <input type="text" id="custom-email" placeholder="Benutzerdefinierte Adresse" style="padding:10px;width:300px;border:1px solid #ccc;border-radius:4px;">
+                <button onclick="useCustomEmail()" style="padding:10px 20px;background:#007bff;color:white;border:none;border-radius:4px;cursor:pointer;margin-left:10px;">Verwenden</button>
+            </div>
+            <button onclick="confirmEmail()" style="padding:10px 30px;background:#28a745;color:white;border:none;border-radius:6px;cursor:pointer;margin-top:20px;font-size:16px;">E-Mail Adresse bestätigen</button>
+        </div>
+
         <!-- Settings -->
         <div id="settings-panel">
             <h3>Einstellungen</h3>
@@ -495,6 +752,8 @@
     <script>
         // ---------------- Auth Simulation ----------------
         let currentUser = null;
+        let userEmailAddress = null;
+        let selectedEmailOption = null;
         
         function updateUI(user) {
             const info = document.getElementById('user-info');
@@ -503,12 +762,21 @@
                 document.getElementById('auth-panel').style.display = 'none';
                 document.getElementById('dashboard').style.display = 'flex';
                 currentUser = user;
+                
+                // Check if user has email address
+                userEmailAddress = localStorage.getItem(`partexmail-${user.email}`);
+                if (!userEmailAddress) {
+                    // Show email setup if no address exists
+                    showEmailSetup();
+                }
             } else {
                 info.innerHTML = '';
                 document.getElementById('auth-panel').style.display = 'block';
                 document.getElementById('dashboard').style.display = 'none';
                 document.getElementById('app-container').style.display = 'none';
+                document.getElementById('email-setup').style.display = 'none';
                 currentUser = null;
+                userEmailAddress = null;
             }
         }
         
@@ -558,9 +826,12 @@
             document.getElementById('presenter-menu').style.display = 'none';
             document.getElementById('editor').style.display = 'none';
             document.getElementById('slides-container').style.display = 'none';
+            document.getElementById('mail-container').style.display = 'none';
             document.getElementById('writer-header').style.display = 'none';
             document.getElementById('presenter-header').style.display = 'none';
+            document.getElementById('mail-header').style.display = 'none';
             document.getElementById('settings-panel').style.display = 'none';
+            document.getElementById('email-setup').style.display = 'none';
         }
         
         function toggleTheme() {
@@ -589,9 +860,12 @@
             document.getElementById('presenter-menu').style.display = 'none';
             document.getElementById('editor').style.display = 'block';
             document.getElementById('slides-container').style.display = 'none';
+            document.getElementById('mail-container').style.display = 'none';
             document.getElementById('writer-header').style.display = 'flex';
             document.getElementById('presenter-header').style.display = 'none';
+            document.getElementById('mail-header').style.display = 'none';
             document.getElementById('settings-panel').style.display = 'none';
+            document.getElementById('email-setup').style.display = 'none';
             
             let content = localStorage.getItem('partex-content');
             document.getElementById('editor').innerHTML = content ? content : '';
@@ -783,9 +1057,12 @@
             document.getElementById('presenter-menu').style.display = 'flex';
             document.getElementById('editor').style.display = 'none';
             document.getElementById('slides-container').style.display = 'block';
+            document.getElementById('mail-container').style.display = 'none';
             document.getElementById('writer-header').style.display = 'none';
             document.getElementById('presenter-header').style.display = 'flex';
+            document.getElementById('mail-header').style.display = 'none';
             document.getElementById('settings-panel').style.display = 'none';
+            document.getElementById('email-setup').style.display = 'none';
             
             if (slides.length === 0) addSlide();
             showSlide(currentSlide);
@@ -899,6 +1176,224 @@
         
         function updateSlideCounter() {
             document.getElementById('slide-counter').innerHTML = `Folie ${currentSlide + 1} von ${slides.length}`;
+        }
+
+        // ---------------- Mail App ----------------
+        let currentFolder = 'inbox';
+        let emails = {
+            inbox: [
+                { id: 1, from: 'support@partex.com', to: userEmailAddress, subject: 'Willkommen bei PartexMail!', body: 'Herzlich willkommen bei Ihrem neuen PartexMail Account!', date: '2023-10-01', read: false },
+                { id: 2, from: 'team@partex.com', to: userEmailAddress, subject: 'Ihre PartexMail ist aktiv', body: 'Ihr PartexMail Account wurde erfolgreich aktiviert. Sie können jetzt E-Mails senden und empfangen.', date: '2023-10-01', read: true }
+            ],
+            sent: [
+                { id: 3, from: userEmailAddress, to: 'friend@example.com', subject: 'Test E-Mail', body: 'Dies ist eine Test-E-Mail von meinem neuen PartexMail Account!', date: '2023-10-01', read: true }
+            ],
+            drafts: [],
+            trash: []
+        };
+        
+        function openMail() {
+            if (!currentUser) {
+                showNotification('Bitte loggen Sie sich zuerst ein', 'error');
+                return;
+            }
+            
+            if (!userEmailAddress) {
+                showEmailSetup();
+                return;
+            }
+            
+            document.getElementById('dashboard').style.display = 'none';
+            document.getElementById('app-container').style.display = 'block';
+            document.getElementById('writer-menu').style.display = 'none';
+            document.getElementById('presenter-menu').style.display = 'none';
+            document.getElementById('editor').style.display = 'none';
+            document.getElementById('slides-container').style.display = 'none';
+            document.getElementById('mail-container').style.display = 'block';
+            document.getElementById('writer-header').style.display = 'none';
+            document.getElementById('presenter-header').style.display = 'none';
+            document.getElementById('mail-header').style.display = 'flex';
+            document.getElementById('settings-panel').style.display = 'none';
+            document.getElementById('email-setup').style.display = 'none';
+            
+            loadEmails();
+            showNotification('PartexMail geöffnet');
+        }
+        
+        function showEmailSetup() {
+            document.getElementById('dashboard').style.display = 'none';
+            document.getElementById('app-container').style.display = 'block';
+            document.getElementById('email-setup').style.display = 'block';
+        }
+        
+        function selectEmailOption(option) {
+            selectedEmailOption = option;
+            document.querySelectorAll('.email-option').forEach(el => el.classList.remove('selected'));
+            event.target.closest('.email-option').classList.add('selected');
+        }
+        
+        function useCustomEmail() {
+            const customEmail = document.getElementById('custom-email').value;
+            if (customEmail) {
+                selectedEmailOption = customEmail;
+                document.querySelectorAll('.email-option').forEach(el => el.classList.remove('selected'));
+                showNotification('Benutzerdefinierte E-Mail ausgewählt');
+            }
+        }
+        
+        function confirmEmail() {
+            if (!selectedEmailOption) {
+                showNotification('Bitte wählen Sie eine E-Mail Option aus', 'error');
+                return;
+            }
+            
+            let emailAddress;
+            if (selectedEmailOption === 'vorname.nachname') {
+                // Extract name from user email (everything before @)
+                const namePart = currentUser.email.split('@')[0];
+                emailAddress = namePart + '@partex.com';
+            } else if (selectedEmailOption === 'vornamenachname') {
+                const namePart = currentUser.email.split('@')[0].replace('.', '');
+                emailAddress = namePart + '@partex.com';
+            } else if (selectedEmailOption === 'nickname') {
+                const namePart = currentUser.email.split('@')[0].split('.')[0];
+                emailAddress = namePart + '@partex.com';
+            } else {
+                emailAddress = selectedEmailOption + '@partex.com';
+            }
+            
+            userEmailAddress = emailAddress;
+            localStorage.setItem(`partexmail-${currentUser.email}`, userEmailAddress);
+            
+            // Update emails with the new address
+            emails.inbox[0].to = userEmailAddress;
+            emails.inbox[1].to = userEmailAddress;
+            emails.sent[0].from = userEmailAddress;
+            
+            showNotification(`Ihre PartexMail Adresse ist: ${userEmailAddress}`);
+            openMail();
+        }
+        
+        function showFolder(folder) {
+            currentFolder = folder;
+            document.querySelectorAll('.mail-folders li').forEach(el => el.classList.remove('active'));
+            event.target.classList.add('active');
+            loadEmails();
+        }
+        
+        function loadEmails() {
+            const emailList = document.getElementById('email-list');
+            emailList.innerHTML = '';
+            
+            emails[currentFolder].forEach(email => {
+                const emailItem = document.createElement('div');
+                emailItem.className = `mail-item ${email.read ? '' : 'unread'}`;
+                emailItem.onclick = () => viewEmail(email.id);
+                
+                emailItem.innerHTML = `
+                    <div class="mail-sender">${email.from}</div>
+                    <div class="mail-subject">${email.subject}</div>
+                    <div class="mail-preview">${email.body.substring(0, 100)}...</div>
+                `;
+                
+                emailList.appendChild(emailItem);
+            });
+            
+            document.getElementById('mail-list-view').style.display = 'block';
+            document.getElementById('mail-view').style.display = 'none';
+            document.getElementById('compose-view').style.display = 'none';
+        }
+        
+        function viewEmail(id) {
+            const email = emails[currentFolder].find(e => e.id === id);
+            if (email) {
+                email.read = true;
+                
+                document.getElementById('email-content').innerHTML = `
+                    <div class="mail-header">
+                        <h3>${email.subject}</h3>
+                        <p><strong>Von:</strong> ${email.from}</p>
+                        <p><strong>An:</strong> ${email.to}</p>
+                        <p><strong>Datum:</strong> ${email.date}</p>
+                    </div>
+                    <div class="mail-body">
+                        <p>${email.body}</p>
+                    </div>
+                `;
+                
+                document.getElementById('mail-list-view').style.display = 'none';
+                document.getElementById('mail-view').style.display = 'block';
+                document.getElementById('compose-view').style.display = 'none';
+                
+                loadEmails(); // Refresh to update read status
+            }
+        }
+        
+        function backToInbox() {
+            document.getElementById('mail-list-view').style.display = 'block';
+            document.getElementById('mail-view').style.display = 'none';
+            document.getElementById('compose-view').style.display = 'none';
+        }
+        
+        function composeEmail() {
+            document.getElementById('compose-to').value = '';
+            document.getElementById('compose-subject').value = '';
+            document.getElementById('compose-body').value = '';
+            
+            document.getElementById('mail-list-view').style.display = 'none';
+            document.getElementById('mail-view').style.display = 'none';
+            document.getElementById('compose-view').style.display = 'block';
+        }
+        
+        function sendEmail() {
+            const to = document.getElementById('compose-to').value;
+            const subject = document.getElementById('compose-subject').value;
+            const body = document.getElementById('compose-body').value;
+            
+            if (!to || !subject || !body) {
+                showNotification('Bitte füllen Sie alle Felder aus', 'error');
+                return;
+            }
+            
+            const newEmail = {
+                id: Date.now(),
+                from: userEmailAddress,
+                to: to,
+                subject: subject,
+                body: body,
+                date: new Date().toISOString().split('T')[0],
+                read: true
+            };
+            
+            emails.sent.push(newEmail);
+            showNotification('E-Mail gesendet!');
+            backToInbox();
+        }
+        
+        function replyEmail() {
+            const currentEmail = emails[currentFolder].find(e => e.id === parseInt(document.querySelector('.mail-header h3').dataset.id));
+            if (currentEmail) {
+                document.getElementById('compose-to').value = currentEmail.from;
+                document.getElementById('compose-subject').value = `Re: ${currentEmail.subject}`;
+                document.getElementById('compose-body').value = `\n\n--- Original Message ---\n${currentEmail.body}`;
+                
+                document.getElementById('mail-list-view').style.display = 'none';
+                document.getElementById('mail-view').style.display = 'none';
+                document.getElementById('compose-view').style.display = 'block';
+            }
+        }
+        
+        function deleteEmail() {
+            const currentEmailId = parseInt(document.querySelector('.mail-header h3').dataset.id);
+            if (currentEmailId) {
+                const emailIndex = emails[currentFolder].findIndex(e => e.id === currentEmailId);
+                if (emailIndex !== -1) {
+                    const deletedEmail = emails[currentFolder].splice(emailIndex, 1)[0];
+                    emails.trash.push(deletedEmail);
+                    showNotification('E-Mail gelöscht');
+                    backToInbox();
+                }
+            }
         }
 
         // ---------------- Drag & Drop ----------------
