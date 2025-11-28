@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PartexHub Full Pro</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Montserrat&family=Lobster&family=Open+Sans&family=Pacifico&family=Fira+Code&family=Courier+Prime&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* ---------------- Grundlayout ---------------- */
         * {
@@ -288,7 +289,7 @@
             font-weight: bold;
         }
         
-        /* Mail App Styles */
+        /* Mail App Styles - COMPLETELY REDESIGNED */
         #mail-container {
             display: none;
             width: 100%;
@@ -297,11 +298,17 @@
             border-radius: 12px;
             border: 1px solid #ccc;
             overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
         
         body.dark #mail-container {
             background: #1e1e1e;
             border: 1px solid #444;
+        }
+        
+        .mail-layout {
+            display: flex;
+            height: 100%;
         }
         
         .mail-sidebar {
@@ -310,7 +317,8 @@
             height: 100%;
             border-right: 1px solid #dee2e6;
             padding: 20px;
-            float: left;
+            display: flex;
+            flex-direction: column;
         }
         
         body.dark .mail-sidebar {
@@ -319,10 +327,49 @@
         }
         
         .mail-content {
-            margin-left: 250px;
+            flex: 1;
             height: 100%;
-            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .mail-toolbar {
+            padding: 15px 20px;
+            border-bottom: 1px solid #dee2e6;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f8f9fa;
+        }
+        
+        body.dark .mail-toolbar {
+            background: #2d2d2d;
+            border-bottom: 1px solid #444;
+        }
+        
+        .mail-main {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+        
+        .mail-list-container {
+            width: 35%;
+            border-right: 1px solid #dee2e6;
             overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        body.dark .mail-list-container {
+            border-right: 1px solid #444;
+        }
+        
+        .mail-view-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
         }
         
         .mail-folders {
@@ -331,11 +378,14 @@
         }
         
         .mail-folders li {
-            padding: 10px 15px;
+            padding: 12px 15px;
             cursor: pointer;
             border-radius: 6px;
             margin-bottom: 5px;
             transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         
         .mail-folders li:hover, .mail-folders li.active {
@@ -347,13 +397,8 @@
         }
         
         .mail-list {
-            border: 1px solid #dee2e6;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-        
-        body.dark .mail-list {
-            border: 1px solid #444;
+            flex: 1;
+            overflow-y: auto;
         }
         
         .mail-item {
@@ -361,6 +406,9 @@
             border-bottom: 1px solid #dee2e6;
             cursor: pointer;
             transition: 0.2s;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
         }
         
         .mail-item:hover {
@@ -384,49 +432,235 @@
             border-bottom: none;
         }
         
+        .mail-checkbox {
+            margin-top: 3px;
+        }
+        
         .mail-sender {
             font-weight: bold;
             margin-bottom: 5px;
+            font-size: 14px;
         }
         
         .mail-subject {
             margin-bottom: 5px;
+            font-size: 14px;
         }
         
         .mail-preview {
             color: #6c757d;
-            font-size: 14px;
+            font-size: 13px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            flex: 1;
+        }
+        
+        .mail-date {
+            font-size: 12px;
+            color: #6c757d;
+            white-space: nowrap;
         }
         
         .mail-view {
-            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
         }
         
         .mail-header {
             border-bottom: 1px solid #dee2e6;
-            padding-bottom: 15px;
-            margin-bottom: 15px;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
         }
         
         .mail-actions {
             margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .mail-btn {
+            padding: 8px 16px;
+            border: 1px solid #dee2e6;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: 0.2s;
+        }
+        
+        .mail-btn:hover {
+            background: #f8f9fa;
+        }
+        
+        body.dark .mail-btn {
+            background: #2d2d2d;
+            border-color: #444;
+            color: white;
+        }
+        
+        body.dark .mail-btn:hover {
+            background: #3d3d3d;
+        }
+        
+        .mail-btn.primary {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+        
+        .mail-btn.primary:hover {
+            background: #0056b3;
         }
         
         .compose-btn {
             background: #007bff;
             color: white;
             border: none;
-            padding: 10px 20px;
+            padding: 12px 20px;
             border-radius: 6px;
             cursor: pointer;
             margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: bold;
+            width: 100%;
+            justify-content: center;
         }
         
         .compose-btn:hover {
             background: #0056b3;
+        }
+        
+        /* Compose Modal */
+        .compose-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            max-width: 700px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            z-index: 3000;
+            overflow: hidden;
+        }
+        
+        body.dark .compose-modal {
+            background: #2d2d2d;
+        }
+        
+        .compose-header {
+            background: #f8f9fa;
+            padding: 15px 20px;
+            border-bottom: 1px solid #dee2e6;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        body.dark .compose-header {
+            background: #3d3d3d;
+            border-bottom: 1px solid #444;
+        }
+        
+        .compose-body {
+            padding: 20px;
+        }
+        
+        .compose-field {
+            margin-bottom: 15px;
+        }
+        
+        .compose-field label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        .compose-field input, .compose-field textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            font-family: 'Roboto', sans-serif;
+        }
+        
+        body.dark .compose-field input, body.dark .compose-field textarea {
+            background: #1e1e1e;
+            border-color: #444;
+            color: white;
+        }
+        
+        .compose-field textarea {
+            min-height: 200px;
+            resize: vertical;
+        }
+        
+        .compose-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        .attachment-list {
+            margin-top: 10px;
+        }
+        
+        .attachment-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px;
+            background: #f8f9fa;
+            border-radius: 4px;
+            margin-bottom: 5px;
+        }
+        
+        body.dark .attachment-item {
+            background: #3d3d3d;
+        }
+        
+        /* Email Suggestions */
+        .email-suggestions {
+            position: absolute;
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            width: 100%;
+            display: none;
+        }
+        
+        body.dark .email-suggestions {
+            background: #2d2d2d;
+            border-color: #444;
+        }
+        
+        .email-suggestion {
+            padding: 10px 15px;
+            cursor: pointer;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .email-suggestion:hover {
+            background: #f8f9fa;
+        }
+        
+        body.dark .email-suggestion:hover {
+            background: #3d3d3d;
+        }
+        
+        .email-suggestion:last-child {
+            border-bottom: none;
         }
         
         /* Neue Stile für zusätzliche Funktionen */
@@ -537,6 +771,17 @@
         body.dark .email-option.selected {
             background: #1a3a5f;
         }
+        
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+        }
     </style>
 </head>
 <body>
@@ -646,43 +891,114 @@
             <button class="back-button" onclick="goDashboard()">Zurück zum Dashboard</button>
         </div>
         
-        <!-- Mail App -->
+        <!-- Mail App - COMPLETELY REDESIGNED -->
         <div id="mail-container" style="display:none;">
-            <div class="mail-sidebar">
-                <button class="compose-btn" onclick="composeEmail()">Neue E-Mail</button>
-                <ul class="mail-folders">
-                    <li class="active" onclick="showFolder('inbox')">Posteingang</li>
-                    <li onclick="showFolder('sent')">Gesendet</li>
-                    <li onclick="showFolder('drafts')">Entwürfe</li>
-                    <li onclick="showFolder('trash')">Papierkorb</li>
-                </ul>
+            <div class="mail-layout">
+                <div class="mail-sidebar">
+                    <button class="compose-btn" onclick="openComposeModal()">
+                        <i class="fas fa-edit"></i> Verfassen
+                    </button>
+                    <ul class="mail-folders">
+                        <li class="active" onclick="showFolder('inbox')">
+                            <i class="fas fa-inbox"></i> Posteingang
+                            <span id="inbox-count" class="folder-count"></span>
+                        </li>
+                        <li onclick="showFolder('sent')">
+                            <i class="fas fa-paper-plane"></i> Gesendet
+                        </li>
+                        <li onclick="showFolder('drafts')">
+                            <i class="fas fa-file-alt"></i> Entwürfe
+                        </li>
+                        <li onclick="showFolder('trash')">
+                            <i class="fas fa-trash"></i> Papierkorb
+                        </li>
+                    </ul>
+                </div>
+                <div class="mail-content">
+                    <div class="mail-toolbar">
+                        <div class="mail-actions">
+                            <button class="mail-btn" onclick="refreshMail()">
+                                <i class="fas fa-sync-alt"></i> Aktualisieren
+                            </button>
+                            <button class="mail-btn" onclick="deleteSelectedEmails()">
+                                <i class="fas fa-trash"></i> Löschen
+                            </button>
+                        </div>
+                        <div class="mail-search">
+                            <input type="text" id="mail-search" placeholder="E-Mails durchsuchen..." style="padding: 8px; border: 1px solid #dee2e6; border-radius: 4px;">
+                        </div>
+                    </div>
+                    <div class="mail-main">
+                        <div class="mail-list-container">
+                            <div class="mail-list" id="email-list">
+                                <!-- Emails werden hier dynamisch geladen -->
+                            </div>
+                        </div>
+                        <div class="mail-view-container" id="mail-view-container">
+                            <div id="empty-view" style="display: flex; justify-content: center; align-items: center; height: 100%; color: #6c757d;">
+                                <div style="text-align: center;">
+                                    <i class="fas fa-envelope-open" style="font-size: 48px; margin-bottom: 15px;"></i>
+                                    <h3>Wählen Sie eine E-Mail aus</h3>
+                                    <p>Klicken Sie auf eine E-Mail in der Liste, um sie zu lesen</p>
+                                </div>
+                            </div>
+                            <div id="mail-view" style="display: none;">
+                                <div class="mail-actions">
+                                    <button class="mail-btn" onclick="backToInbox()">
+                                        <i class="fas fa-arrow-left"></i> Zurück
+                                    </button>
+                                    <button class="mail-btn" onclick="replyEmail()">
+                                        <i class="fas fa-reply"></i> Antworten
+                                    </button>
+                                    <button class="mail-btn" onclick="forwardEmail()">
+                                        <i class="fas fa-share"></i> Weiterleiten
+                                    </button>
+                                    <button class="mail-btn" onclick="deleteCurrentEmail()">
+                                        <i class="fas fa-trash"></i> Löschen
+                                    </button>
+                                </div>
+                                <div class="mail-view" id="email-content">
+                                    <!-- Email-Inhalt wird hier angezeigt -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="mail-content">
-                <div id="mail-list-view">
-                    <div class="mail-list" id="email-list">
-                        <!-- Emails werden hier dynamisch geladen -->
-                    </div>
+        </div>
+
+        <!-- Compose Modal -->
+        <div class="compose-modal" id="compose-modal">
+            <div class="compose-header">
+                <h3>Neue Nachricht</h3>
+                <button onclick="closeComposeModal()" style="background: none; border: none; font-size: 18px; cursor: pointer;">×</button>
+            </div>
+            <div class="compose-body">
+                <div class="compose-field">
+                    <label for="compose-to">An</label>
+                    <input type="text" id="compose-to" placeholder="Empfänger eingeben">
+                    <div class="email-suggestions" id="to-suggestions"></div>
                 </div>
-                <div id="mail-view" style="display:none;">
-                    <div class="mail-actions">
-                        <button onclick="backToInbox()">← Zurück</button>
-                        <button onclick="replyEmail()">Antworten</button>
-                        <button onclick="deleteEmail()">Löschen</button>
-                    </div>
-                    <div class="mail-view" id="email-content">
-                        <!-- Email-Inhalt wird hier angezeigt -->
-                    </div>
+                <div class="compose-field">
+                    <label for="compose-subject">Betreff</label>
+                    <input type="text" id="compose-subject" placeholder="Betreff eingeben">
                 </div>
-                <div id="compose-view" style="display:none;">
-                    <div class="mail-actions">
-                        <button onclick="backToInbox()">Abbrechen</button>
-                        <button onclick="sendEmail()">Senden</button>
-                    </div>
-                    <div class="compose-form">
-                        <input type="text" id="compose-to" placeholder="An" style="width:100%;padding:10px;margin-bottom:10px;border:1px solid #ccc;border-radius:4px;">
-                        <input type="text" id="compose-subject" placeholder="Betreff" style="width:100%;padding:10px;margin-bottom:10px;border:1px solid #ccc;border-radius:4px;">
-                        <textarea id="compose-body" placeholder="Nachricht" style="width:100%;height:300px;padding:10px;border:1px solid #ccc;border-radius:4px;"></textarea>
-                    </div>
+                <div class="compose-field">
+                    <label for="compose-body">Nachricht</label>
+                    <textarea id="compose-body" placeholder="Ihre Nachricht..."></textarea>
+                </div>
+                <div class="compose-field">
+                    <label for="compose-attachments">Anhänge</label>
+                    <input type="file" id="compose-attachments" multiple onchange="handleAttachments()">
+                    <div class="attachment-list" id="attachment-list"></div>
+                </div>
+                <div class="compose-actions">
+                    <button class="mail-btn" onclick="saveDraft()">
+                        <i class="fas fa-save"></i> Entwurf speichern
+                    </button>
+                    <button class="mail-btn primary" onclick="sendEmail()">
+                        <i class="fas fa-paper-plane"></i> Senden
+                    </button>
                 </div>
             </div>
         </div>
@@ -746,6 +1062,9 @@
         </div>
     </div>
 
+    <!-- Overlay for modals -->
+    <div class="overlay" id="overlay" onclick="closeComposeModal()"></div>
+
     <!-- Notification Element -->
     <div id="notification" class="notification"></div>
 
@@ -754,6 +1073,20 @@
         let currentUser = null;
         let userEmailAddress = null;
         let selectedEmailOption = null;
+        
+        // Sample user database for email suggestions
+        const userDatabase = [
+            { name: "Max Mustermann", email: "max.mustermann@partex.com" },
+            { name: "Anna Schmidt", email: "anna.schmidt@partex.com" },
+            { name: "Thomas Weber", email: "thomas.weber@partex.com" },
+            { name: "Lisa Fischer", email: "lisa.fischer@partex.com" },
+            { name: "David Wagner", email: "david.wagner@partex.com" },
+            { name: "Sarah Meyer", email: "sarah.meyer@partex.com" },
+            { name: "Paul Becker", email: "paul.becker@partex.com" },
+            { name: "Julia Hoffmann", email: "julia.hoffmann@partex.com" },
+            { name: "Michael Schulz", email: "michael.schulz@partex.com" },
+            { name: "Maria Koch", email: "maria.koch@partex.com" }
+        ];
         
         function updateUI(user) {
             const info = document.getElementById('user-info');
@@ -832,6 +1165,8 @@
             document.getElementById('mail-header').style.display = 'none';
             document.getElementById('settings-panel').style.display = 'none';
             document.getElementById('email-setup').style.display = 'none';
+            document.getElementById('compose-modal').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
         }
         
         function toggleTheme() {
@@ -1178,15 +1513,52 @@
             document.getElementById('slide-counter').innerHTML = `Folie ${currentSlide + 1} von ${slides.length}`;
         }
 
-        // ---------------- Mail App ----------------
+        // ---------------- Mail App - COMPLETELY REWORKED ----------------
         let currentFolder = 'inbox';
+        let currentEmailId = null;
+        let attachments = [];
+        
+        // Sample email database
         let emails = {
             inbox: [
-                { id: 1, from: 'support@partex.com', to: userEmailAddress, subject: 'Willkommen bei PartexMail!', body: 'Herzlich willkommen bei Ihrem neuen PartexMail Account!', date: '2023-10-01', read: false },
-                { id: 2, from: 'team@partex.com', to: userEmailAddress, subject: 'Ihre PartexMail ist aktiv', body: 'Ihr PartexMail Account wurde erfolgreich aktiviert. Sie können jetzt E-Mails senden und empfangen.', date: '2023-10-01', read: true }
+                { 
+                    id: 1, 
+                    from: 'support@partex.com', 
+                    to: userEmailAddress, 
+                    subject: 'Willkommen bei PartexMail!', 
+                    body: 'Herzlich willkommen bei Ihrem neuen PartexMail Account!\n\nWir freuen uns, Sie in unserer Community begrüßen zu dürfen. Mit PartexMail erhalten Sie eine zuverlässige und sichere E-Mail-Lösung mit vielen nützlichen Funktionen.\n\nBei Fragen stehen wir Ihnen jederzeit zur Verfügung.\n\nIhr PartexMail Team', 
+                    date: '2023-10-01 10:30', 
+                    read: false 
+                },
+                { 
+                    id: 2, 
+                    from: 'team@partex.com', 
+                    to: userEmailAddress, 
+                    subject: 'Ihre PartexMail ist aktiv', 
+                    body: 'Ihr PartexMail Account wurde erfolgreich aktiviert. Sie können jetzt E-Mails senden und empfangen.\n\nNutzen Sie die vielen Funktionen von PartexMail:\n- Schnelle und zuverlässige E-Mail-Kommunikation\n- Anhänge bis zu 25 MB\n- Intelligente Suche\n- Und vieles mehr!\n\nViel Spaß mit Ihrem neuen Account!', 
+                    date: '2023-10-01 11:15', 
+                    read: true 
+                },
+                { 
+                    id: 3, 
+                    from: 'max.mustermann@partex.com', 
+                    to: userEmailAddress, 
+                    subject: 'Meeting nächste Woche', 
+                    body: 'Hallo,\n\nich wollte nur kurz das Meeting für nächste Woche bestätigen. Wir treffen uns wie besprochen am Dienstag um 14:00 Uhr im Konferenzraum 3.\n\nBitte bringen Sie die Unterlagen zum Projekt mit.\n\nViele Grüße\nMax Mustermann', 
+                    date: '2023-10-02 09:45', 
+                    read: false 
+                }
             ],
             sent: [
-                { id: 3, from: userEmailAddress, to: 'friend@example.com', subject: 'Test E-Mail', body: 'Dies ist eine Test-E-Mail von meinem neuen PartexMail Account!', date: '2023-10-01', read: true }
+                { 
+                    id: 4, 
+                    from: userEmailAddress, 
+                    to: 'anna.schmidt@partex.com', 
+                    subject: 'Danke für die Zusammenarbeit', 
+                    body: 'Hallo Anna,\n\nvielen Dank für die tolle Zusammenarbeit in den letzten Wochen. Das Projekt war ein voller Erfolg!\n\nIch hoffe, wir können in Zukunft wieder zusammenarbeiten.\n\nBeste Grüße', 
+                    date: '2023-10-01 14:20', 
+                    read: true 
+                }
             ],
             drafts: [],
             trash: []
@@ -1277,7 +1649,7 @@
         function showFolder(folder) {
             currentFolder = folder;
             document.querySelectorAll('.mail-folders li').forEach(el => el.classList.remove('active'));
-            event.target.classList.add('active');
+            event.target.closest('li').classList.add('active');
             loadEmails();
         }
         
@@ -1285,64 +1657,108 @@
             const emailList = document.getElementById('email-list');
             emailList.innerHTML = '';
             
+            // Update folder counts
+            const inboxCount = emails.inbox.filter(email => !email.read).length;
+            document.getElementById('inbox-count').textContent = inboxCount > 0 ? `(${inboxCount})` : '';
+            
+            if (emails[currentFolder].length === 0) {
+                emailList.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: #6c757d;">
+                        <i class="fas fa-inbox" style="font-size: 48px; margin-bottom: 15px;"></i>
+                        <p>Keine E-Mails in diesem Ordner</p>
+                    </div>
+                `;
+                return;
+            }
+            
             emails[currentFolder].forEach(email => {
                 const emailItem = document.createElement('div');
                 emailItem.className = `mail-item ${email.read ? '' : 'unread'}`;
                 emailItem.onclick = () => viewEmail(email.id);
                 
+                // Format date for display
+                const emailDate = new Date(email.date);
+                const formattedDate = emailDate.toLocaleDateString('de-DE', { 
+                    day: '2-digit', 
+                    month: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                
                 emailItem.innerHTML = `
-                    <div class="mail-sender">${email.from}</div>
-                    <div class="mail-subject">${email.subject}</div>
-                    <div class="mail-preview">${email.body.substring(0, 100)}...</div>
+                    <div class="mail-checkbox">
+                        <input type="checkbox" onclick="event.stopPropagation()">
+                    </div>
+                    <div style="flex: 1; min-width: 0;">
+                        <div class="mail-sender">${email.from}</div>
+                        <div class="mail-subject">${email.subject}</div>
+                        <div class="mail-preview">${email.body.substring(0, 80)}...</div>
+                    </div>
+                    <div class="mail-date">${formattedDate}</div>
                 `;
                 
                 emailList.appendChild(emailItem);
             });
             
-            document.getElementById('mail-list-view').style.display = 'block';
+            // Reset view to list
+            document.getElementById('empty-view').style.display = 'flex';
             document.getElementById('mail-view').style.display = 'none';
-            document.getElementById('compose-view').style.display = 'none';
+            currentEmailId = null;
         }
         
         function viewEmail(id) {
             const email = emails[currentFolder].find(e => e.id === id);
             if (email) {
                 email.read = true;
+                currentEmailId = id;
+                
+                // Format date for display
+                const emailDate = new Date(email.date);
+                const formattedDate = emailDate.toLocaleDateString('de-DE', { 
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
                 
                 document.getElementById('email-content').innerHTML = `
                     <div class="mail-header">
-                        <h3>${email.subject}</h3>
+                        <h2>${email.subject}</h2>
                         <p><strong>Von:</strong> ${email.from}</p>
                         <p><strong>An:</strong> ${email.to}</p>
-                        <p><strong>Datum:</strong> ${email.date}</p>
+                        <p><strong>Datum:</strong> ${formattedDate}</p>
                     </div>
-                    <div class="mail-body">
-                        <p>${email.body}</p>
+                    <div class="mail-body" style="white-space: pre-line; line-height: 1.6;">
+                        ${email.body}
                     </div>
                 `;
                 
-                document.getElementById('mail-list-view').style.display = 'none';
+                document.getElementById('empty-view').style.display = 'none';
                 document.getElementById('mail-view').style.display = 'block';
-                document.getElementById('compose-view').style.display = 'none';
                 
                 loadEmails(); // Refresh to update read status
             }
         }
         
         function backToInbox() {
-            document.getElementById('mail-list-view').style.display = 'block';
+            document.getElementById('empty-view').style.display = 'flex';
             document.getElementById('mail-view').style.display = 'none';
-            document.getElementById('compose-view').style.display = 'none';
+            currentEmailId = null;
         }
         
-        function composeEmail() {
-            document.getElementById('compose-to').value = '';
-            document.getElementById('compose-subject').value = '';
-            document.getElementById('compose-body').value = '';
-            
-            document.getElementById('mail-list-view').style.display = 'none';
-            document.getElementById('mail-view').style.display = 'none';
-            document.getElementById('compose-view').style.display = 'block';
+        function openComposeModal() {
+            document.getElementById('compose-modal').style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('compose-to').focus();
+        }
+        
+        function closeComposeModal() {
+            document.getElementById('compose-modal').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+            attachments = [];
+            document.getElementById('attachment-list').innerHTML = '';
         }
         
         function sendEmail() {
@@ -1361,40 +1777,181 @@
                 to: to,
                 subject: subject,
                 body: body,
-                date: new Date().toISOString().split('T')[0],
-                read: true
+                date: new Date().toISOString().replace('T', ' ').substring(0, 16),
+                read: true,
+                attachments: [...attachments]
             };
             
             emails.sent.push(newEmail);
             showNotification('E-Mail gesendet!');
-            backToInbox();
+            closeComposeModal();
+            loadEmails();
+        }
+        
+        function saveDraft() {
+            const to = document.getElementById('compose-to').value;
+            const subject = document.getElementById('compose-subject').value;
+            const body = document.getElementById('compose-body').value;
+            
+            const draft = {
+                id: Date.now(),
+                from: userEmailAddress,
+                to: to,
+                subject: subject || '(Kein Betreff)',
+                body: body,
+                date: new Date().toISOString().replace('T', ' ').substring(0, 16),
+                read: true,
+                attachments: [...attachments]
+            };
+            
+            emails.drafts.push(draft);
+            showNotification('Entwurf gespeichert');
+            closeComposeModal();
+            loadEmails();
         }
         
         function replyEmail() {
-            const currentEmail = emails[currentFolder].find(e => e.id === parseInt(document.querySelector('.mail-header h3').dataset.id));
+            if (!currentEmailId) return;
+            
+            const currentEmail = emails[currentFolder].find(e => e.id === currentEmailId);
             if (currentEmail) {
                 document.getElementById('compose-to').value = currentEmail.from;
                 document.getElementById('compose-subject').value = `Re: ${currentEmail.subject}`;
-                document.getElementById('compose-body').value = `\n\n--- Original Message ---\n${currentEmail.body}`;
+                document.getElementById('compose-body').value = `\n\n--- Ursprüngliche Nachricht ---\nAm ${new Date(currentEmail.date).toLocaleString('de-DE')} schrieb ${currentEmail.from}:\n> ${currentEmail.body.replace(/\n/g, '\n> ')}`;
                 
-                document.getElementById('mail-list-view').style.display = 'none';
-                document.getElementById('mail-view').style.display = 'none';
-                document.getElementById('compose-view').style.display = 'block';
+                openComposeModal();
             }
         }
         
-        function deleteEmail() {
-            const currentEmailId = parseInt(document.querySelector('.mail-header h3').dataset.id);
-            if (currentEmailId) {
-                const emailIndex = emails[currentFolder].findIndex(e => e.id === currentEmailId);
-                if (emailIndex !== -1) {
-                    const deletedEmail = emails[currentFolder].splice(emailIndex, 1)[0];
-                    emails.trash.push(deletedEmail);
-                    showNotification('E-Mail gelöscht');
-                    backToInbox();
-                }
+        function forwardEmail() {
+            if (!currentEmailId) return;
+            
+            const currentEmail = emails[currentFolder].find(e => e.id === currentEmailId);
+            if (currentEmail) {
+                document.getElementById('compose-to').value = '';
+                document.getElementById('compose-subject').value = `Fwd: ${currentEmail.subject}`;
+                document.getElementById('compose-body').value = `\n\n--- Weitergeleitete Nachricht ---\nVon: ${currentEmail.from}\nDatum: ${new Date(currentEmail.date).toLocaleString('de-DE')}\nAn: ${currentEmail.to}\nBetreff: ${currentEmail.subject}\n\n${currentEmail.body}`;
+                
+                openComposeModal();
             }
         }
+        
+        function deleteCurrentEmail() {
+            if (!currentEmailId) return;
+            
+            const emailIndex = emails[currentFolder].findIndex(e => e.id === currentEmailId);
+            if (emailIndex !== -1) {
+                const deletedEmail = emails[currentFolder].splice(emailIndex, 1)[0];
+                emails.trash.push(deletedEmail);
+                showNotification('E-Mail gelöscht');
+                backToInbox();
+                loadEmails();
+            }
+        }
+        
+        function deleteSelectedEmails() {
+            // This would delete all selected emails (checkboxes)
+            showNotification('Löschfunktion für ausgewählte E-Mails');
+        }
+        
+        function refreshMail() {
+            loadEmails();
+            showNotification('E-Mails aktualisiert');
+        }
+        
+        function handleAttachments() {
+            const files = document.getElementById('compose-attachments').files;
+            const attachmentList = document.getElementById('attachment-list');
+            
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                attachments.push(file);
+                
+                const attachmentItem = document.createElement('div');
+                attachmentItem.className = 'attachment-item';
+                attachmentItem.innerHTML = `
+                    <i class="fas fa-paperclip"></i>
+                    <span>${file.name}</span>
+                    <button onclick="removeAttachment(${attachments.length - 1})" style="margin-left: auto; background: none; border: none; cursor: pointer; color: #dc3545;">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                
+                attachmentList.appendChild(attachmentItem);
+            }
+            
+            // Reset file input
+            document.getElementById('compose-attachments').value = '';
+        }
+        
+        function removeAttachment(index) {
+            attachments.splice(index, 1);
+            loadAttachmentsList();
+        }
+        
+        function loadAttachmentsList() {
+            const attachmentList = document.getElementById('attachment-list');
+            attachmentList.innerHTML = '';
+            
+            attachments.forEach((file, index) => {
+                const attachmentItem = document.createElement('div');
+                attachmentItem.className = 'attachment-item';
+                attachmentItem.innerHTML = `
+                    <i class="fas fa-paperclip"></i>
+                    <span>${file.name}</span>
+                    <button onclick="removeAttachment(${index})" style="margin-left: auto; background: none; border: none; cursor: pointer; color: #dc3545;">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                
+                attachmentList.appendChild(attachmentItem);
+            });
+        }
+        
+        // Email suggestions functionality
+        document.getElementById('compose-to').addEventListener('input', function() {
+            const input = this.value.toLowerCase();
+            const suggestions = document.getElementById('to-suggestions');
+            
+            if (input.length < 2) {
+                suggestions.style.display = 'none';
+                return;
+            }
+            
+            const matches = userDatabase.filter(user => 
+                user.name.toLowerCase().includes(input) || 
+                user.email.toLowerCase().includes(input)
+            );
+            
+            if (matches.length === 0) {
+                suggestions.style.display = 'none';
+                return;
+            }
+            
+            suggestions.innerHTML = '';
+            matches.forEach(user => {
+                const suggestion = document.createElement('div');
+                suggestion.className = 'email-suggestion';
+                suggestion.innerHTML = `
+                    <div><strong>${user.name}</strong></div>
+                    <div style="font-size: 12px; color: #6c757d;">${user.email}</div>
+                `;
+                suggestion.onclick = () => {
+                    document.getElementById('compose-to').value = user.email;
+                    suggestions.style.display = 'none';
+                };
+                suggestions.appendChild(suggestion);
+            });
+            
+            suggestions.style.display = 'block';
+        });
+        
+        // Close suggestions when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.compose-field')) {
+                document.getElementById('to-suggestions').style.display = 'none';
+            }
+        });
 
         // ---------------- Drag & Drop ----------------
         function dragElement(elmnt) {
